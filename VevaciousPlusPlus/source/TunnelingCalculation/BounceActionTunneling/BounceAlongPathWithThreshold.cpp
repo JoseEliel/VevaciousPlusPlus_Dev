@@ -203,29 +203,39 @@ namespace VevaciousPlusPlus
     TunnelPath const* bestPath( new LinearSplineThroughNodes( straightPath,
                                                     std::vector< double >( 0 ),
                                                       tunnelingTemperature ) );
-
+    std::cout<<"(JR) Created bestPath at "<< bestPath << std::endl;
     actionCalculator->ResetVacua( potentialFunction,
                                   falseVacuum,
                                   trueVacuum,
                                   tunnelingTemperature );
+    std::cout<<"(JR) after ResetVacua " << std::endl;
+    std::cout<<"(JR) pathPotentialResolution "<< pathPotentialResolution << std::endl;
 
     SplinePotential pathPotential( potentialFunction,
                                    *bestPath,
                                    pathPotentialResolution,
                                    requiredVacuumSeparationSquared );
+    std::cout<<"(JR) after SplinePotential " << std::endl;
 
     if( !(pathPotential.EnergyBarrierWasResolved()) )
     {
+      std::cout<<"(JR) in if  " << std::endl;
       std::stringstream warningBuilder;
       warningBuilder << "Unable to resolve an energy barrier between false"
       << " vacuum and true vacuum: returning bounce action of zero (which"
       << " should be sufficient to exclude the parameter point).";
       WarningLogger::LogWarning( warningBuilder.str() );
+      std::cout<< "(JR) In Mem leak (?) if loop BounceAlongPathWithThreshold "<< std::endl;
+      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
+      delete bestPath;
       return 0.0;
     }
 
+    std::cout<<"(JR) before create bestBubble " << std::endl;
     BubbleProfile const* bestBubble( (*actionCalculator)( *bestPath,
-                                                          pathPotential ) );
+                                                          pathPotential ) ); //
+
+    std::cout<<"(JR) Created bestBubble at "<< bestBubble << std::endl;
 
     std::cout << std::endl
     << "Initial path bounce action = " << bestBubble->BounceAction();
@@ -251,8 +261,12 @@ namespace VevaciousPlusPlus
               << " for further path improvements.";
       std::cout << std::endl;
       double const bounceAction( bestBubble->BounceAction() );
+      std::cout<<"(JR) will delete pointer at "<< bestBubble << std::endl;
       delete bestBubble;
+      bestBubble=NULL;
+      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
       delete bestPath;
+      bestPath=NULL;
       return bounceAction;
     }
 
@@ -325,10 +339,10 @@ namespace VevaciousPlusPlus
           break;
         };
 
-        TunnelPath const*
-        nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
+        TunnelPath const* nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
                                                    *currentBubble ) );
 
+        std::cout<<"(JR) Created nextPath at "<< nextPath << std::endl;
         SplinePotential potentialApproximation( potentialFunction,
                                                 *nextPath,
                                                 pathPotentialResolution,
@@ -337,12 +351,18 @@ namespace VevaciousPlusPlus
         BubbleProfile const* nextBubble( (*actionCalculator)( *nextPath,
                                                     potentialApproximation ) );
 
+        std::cout<<"(JR) Created nextBubble at "<< nextBubble << std::endl;
+
         // On the first iteration of the loop, these pointers are NULL, so
         // it's no problem to delete them. On subsequent iterations, they point
         // at the higher-action path and bubble from the last iterations
         // comparison between its nextPath and bestPath.
+        std::cout<<"(JR) will delete pointer at "<< bubbleDeleter << std::endl;
         delete bubbleDeleter;
+        bubbleDeleter = NULL;
+        std::cout<<"(JR) will delete pointer at "<< pathDeleter << std::endl;
         delete pathDeleter;
+        pathDeleter=NULL;
 
         if( nextBubble->BounceAction() < bestBubble->BounceAction() )
         {
@@ -392,8 +412,12 @@ namespace VevaciousPlusPlus
                (*pathFinder)->PathCanBeImproved( *currentBubble ) );
       // At the end of the loop, these point at the last tried path and bubble
       // which did not end up as the best ones, so deleting them is no problem.
+      std::cout<<"(JR) will delete pointer at "<< bubbleDeleter << std::endl;
       delete bubbleDeleter;
+      bubbleDeleter = NULL;
+      std::cout<<"(JR) will delete pointer at "<< pathDeleter << std::endl;
       delete pathDeleter;
+      pathDeleter = NULL;
 
       // We don't bother with the rest of the path finders if the action has
       // already dropped below the threshold.
@@ -425,8 +449,12 @@ namespace VevaciousPlusPlus
     std::cout << std::endl;
 
     double const bounceAction( bestBubble->BounceAction() );
+    std::cout<<"(JR) will delete pointer at "<< bestBubble << std::endl;
     delete bestBubble;
+    bestBubble = NULL;
+    std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
     delete bestPath;
+    bestPath = NULL;
     return bounceAction;
   }
 

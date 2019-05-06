@@ -58,10 +58,12 @@ namespace VevaciousPlusPlus
   UndershootOvershootBubble::CalculateProfile( TunnelPath const& tunnelPath,
                         OneDimensionalPotentialAlongPath const& pathPotential )
   {
+    std::cout<<"                     (JR) enter CalculateProfile"<< std::endl;
     auxiliaryAtRadialInfinity = pathPotential.AuxiliaryOfPathFalseVacuum();
     double twoPlusTwiceDampingFactor( 8.0 );
     if( tunnelPath.NonZeroTemperature() )
     {
+      std::cout<<"                            (JR) in if NonZeroTemperature"<< std::endl;
       twoPlusTwiceDampingFactor = 6.0;
     }
 
@@ -69,6 +71,7 @@ namespace VevaciousPlusPlus
 
     undershootAuxiliary = pathPotential.DefiniteUndershootAuxiliary();
     overshootAuxiliary = pathPotential.AuxiliaryOfPathPanicVacuum();
+    std::cout<<"                     (JR) Under & overshootAuxiliary "<<undershootAuxiliary<<"  " << overshootAuxiliary<< std::endl;
 
     // If undershootAuxiliary or overshootAuxiliary is close to the path panic
     // vacuum, it is set to be the (negative) offset from the panic vacuum.
@@ -86,9 +89,8 @@ namespace VevaciousPlusPlus
     // This loop is broken out of if the shoot attempt seems to have been close
     // enough that the integration would take too long to find an overshoot or
     // undershoot, or that the shot was dead on.
-    while( !currentShotGoodEnough
-           &&
-           ( shootAttemptsLeft > 0 ) )
+    std::cout<<"                     (JR) Before while loop currentShotGoodEnough and shootAttemptsLeft  "<<currentShotGoodEnough<<"  " << shootAttemptsLeft<< std::endl;
+    while( !currentShotGoodEnough && ( shootAttemptsLeft > 0 ) )
     {
       worthIntegratingFurther = true;
       auxiliaryProfile.clear();
@@ -97,13 +99,10 @@ namespace VevaciousPlusPlus
       // It shouldn't ever happen that undershootAuxiliary is negative while
       // overshootAuxiliary is positive, as then the undershoot would be at a
       // larger auxiliary value than the overshoot.
-      if( ( undershootAuxiliary > 0.0 )
-          &&
-          ( overshootAuxiliary <= 0.0 ) )
+      if( ( undershootAuxiliary > 0.0 ) && ( overshootAuxiliary <= 0.0 ) )
       {
-        initialAuxiliary = ( 0.5 * ( undershootAuxiliary
-                                     + overshootAuxiliary
-                              + pathPotential.AuxiliaryOfPathPanicVacuum() ) );
+        initialAuxiliary = ( 0.5 * ( undershootAuxiliary + overshootAuxiliary + pathPotential.AuxiliaryOfPathPanicVacuum() ) );
+        
         if( initialAuxiliary >= pathPotential.ThresholdForNearPathPanic() )
         {
           initialAuxiliary -= pathPotential.AuxiliaryOfPathPanicVacuum();
@@ -111,8 +110,7 @@ namespace VevaciousPlusPlus
       }
       else
       {
-        initialAuxiliary
-        = ( 0.5 * ( undershootAuxiliary + overshootAuxiliary ) );
+        initialAuxiliary = ( 0.5 * ( undershootAuxiliary + overshootAuxiliary ) );
       }
 
       // We cannot start at r = 0, as the damping term is proportional to 1/r,
@@ -166,11 +164,11 @@ namespace VevaciousPlusPlus
         {
           // If integrationStartRadius turns out to be relatively small, we
           // carry on with the Euler step from the small-r approximation.
-          initialConditions[ 0 ] = ( initialPositiveAuxiliary
+          initialConditions.at(0) = ( initialPositiveAuxiliary
                                      + ( initialQuadraticCoefficient
                                          * integrationStartRadius
                                          * integrationStartRadius ) );
-          initialConditions[ 1 ] = ( 2.0 * initialQuadraticCoefficient
+          initialConditions.at(1) = ( 2.0 * initialQuadraticCoefficient
                                          * integrationStartRadius );
         }
         else
@@ -222,10 +220,10 @@ namespace VevaciousPlusPlus
           // As above:
           // p - p_0 = (p_i - p_0) * ( [ (4 * I_1(b*r)) / (b*r) ] - 1 )
           // or p - p_0 = (p_i - p_0) * ( [ (2 * sinh(b*r)) / (b*r) ] - 1 )
-          initialConditions[ 0 ] = ( pathPotential.AuxiliaryOfPathPanicVacuum()
+          initialConditions.at(0) = ( pathPotential.AuxiliaryOfPathPanicVacuum()
                                      + ( initialAuxiliary
                                     * ( ( 2.0 * sinhOrBesselPart ) - 1.0 ) ) );
-          initialConditions[ 1 ]
+          initialConditions.at(1)
           = ( initialAuxiliary * inverseRadialScale * scaledSlope );
           integrationStartRadius = ( scaledRadius / inverseRadialScale );
         }
@@ -249,11 +247,11 @@ namespace VevaciousPlusPlus
         integrationStartRadius = ( -auxiliaryPrecisionResolution
                / ( 2.0 * initialQuadraticCoefficient * integrationStepSize ) );
 
-        initialConditions[ 0 ] = ( initialAuxiliary
+        initialConditions.at(0) = ( initialAuxiliary
                                    + ( initialQuadraticCoefficient
                                        * integrationStartRadius
                                        * integrationStartRadius ) );
-        initialConditions[ 1 ] = ( 2.0 * initialQuadraticCoefficient
+        initialConditions.at(1) = ( 2.0 * initialQuadraticCoefficient
                                        * integrationStartRadius );
       }
 
@@ -266,14 +264,15 @@ namespace VevaciousPlusPlus
       while( worthIntegratingFurther )
       {
         integrationStartRadius = auxiliaryProfile.back().radialValue;
-        initialConditions[ 0 ] = auxiliaryProfile.back().auxiliaryValue;
-        initialConditions[ 1 ] = auxiliaryProfile.back().auxiliarySlope;
+        initialConditions.at(0) = auxiliaryProfile.back().auxiliaryValue;
+        initialConditions.at(1) = auxiliaryProfile.back().auxiliarySlope;
         integrationEndRadius = ( 2.0 * integrationStartRadius );
         ShootFromInitialConditions( tunnelPath,
                                     pathPotential );
       }
       --shootAttemptsLeft;
     }
+    std::cout<<"                     (JR) After  while loop, initialAuxiliary  "<< initialAuxiliary<< std::endl;
     // At the end of the loop, initialAuxiliary is either within
     // 2^(-undershootOvershootAttempts) of p_crit, or was close enough that the
     // integration to decide if it was an undershoot or overshoot would take
@@ -288,6 +287,7 @@ namespace VevaciousPlusPlus
     {
       auxiliaryAtBubbleCenter = initialAuxiliary;
     }
+    std::cout<<"                     (JR) End of  UndershootOvershootBubble::CalculateProfile"<< std::endl;
   }
 
   // This looks through odeintProfile to see if there was a definite
@@ -299,45 +299,62 @@ namespace VevaciousPlusPlus
   void UndershootOvershootBubble::RecordFromOdeintProfile(
                                                  TunnelPath const& tunnelPath )
   {
+    std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
     // We start from the beginning of odeintProfile so that we record only as
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
     size_t radialIndex( 0 );
+    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
       // If the shot has gone past the false vacuum, it was definitely an
       // overshoot.
-      if( odeintProfile[ radialIndex ].auxiliaryValue
+      if( odeintProfile.at(radialIndex).auxiliaryValue
           < auxiliaryAtRadialInfinity )
       {
         overshootAuxiliary = initialAuxiliary;
         worthIntegratingFurther = false;
         currentShotGoodEnough = false;
+        std::cout<<"                                               (JR) 1st Break out of while loop with radial index "<< radialIndex<< std::endl;
         break;
       }
       // If the shot is rolling backwards without having yet reached the false
       // vacuum, it was definitely an undershoot.
-      else if( odeintProfile[ radialIndex ].auxiliarySlope > 0.0 )
+      else if( odeintProfile.at(radialIndex).auxiliarySlope > 0.0 )
       {
         undershootAuxiliary = initialAuxiliary;
         worthIntegratingFurther = false;
         currentShotGoodEnough = false;
         break;
+        std::cout<<"                                               (JR) 2nd Break out of while loop with radial index "<< radialIndex<< std::endl;
       }
       ++radialIndex;
     }
+    // (JR) track error: crashes: radial index = 0 
 
-    if( radialIndex < odeintProfile.size() )
+    std::cout<<"                                     (JR) After while loop, odeintProfile size"<< odeintProfile.size()<< " radialIndex "<< radialIndex << "\n" << std::endl;
+    bool add_to_aux = false; // (JR) added to check if auxiliaryProfile is filled
+    bool add_to_aux2 = false; // (JR) added to check if auxiliaryProfile is filled
+    if( radialIndex < odeintProfile.size() )    
     {
-      if( radialIndex > 1 )
+      if( radialIndex > 1 ) // (JR) track error: not entered in crash
       {
+
+        if(add_to_aux==false){std::cout<<"                     (JR) 1. appended vals to Aux profile"<<std::endl;add_to_aux=true;}
+
         auxiliaryProfile.insert( auxiliaryProfile.end(),
                                  ( odeintProfile.begin() + 1 ),
                                  ( odeintProfile.begin() + radialIndex ) );
       }
+      else
+      {
+        std::cout<<"\n !!!!! (JR) if you can read this it should break !!!!!!!! \n"<<std::endl;
+      }
+
     }
     else
     {
+         if(add_to_aux2==false){std::cout<<"                     (JR) 2. appended vals to Aux profile"<<std::endl;add_to_aux2=true;}
       auxiliaryProfile.insert( auxiliaryProfile.end(),
                                ( odeintProfile.begin() + 1 ),
                                odeintProfile.end() );
@@ -367,11 +384,11 @@ namespace VevaciousPlusPlus
            fieldIndex < numberOfFields;
            ++fieldIndex )
       {
-        falseVacuumField = falseConfiguration[ fieldIndex ];
-        fieldDifference = ( currentConfiguration[ fieldIndex ]
+        falseVacuumField = falseConfiguration.at(fieldIndex);
+        fieldDifference = ( currentConfiguration.at(fieldIndex)
                             - falseVacuumField );
         currentDistanceSquared += ( fieldDifference * fieldDifference );
-        fieldDifference = ( initialConfiguration[ fieldIndex ]
+        fieldDifference = ( initialConfiguration.at(fieldIndex)
                             - falseVacuumField );
         initialDistanceSquared += ( fieldDifference * fieldDifference );
       }

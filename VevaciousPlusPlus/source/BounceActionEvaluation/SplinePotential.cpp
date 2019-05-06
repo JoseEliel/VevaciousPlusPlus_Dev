@@ -6,6 +6,7 @@
  */
 
 #include "BounceActionEvaluation/SplinePotential.hpp"
+#include <iostream>
 
 namespace VevaciousPlusPlus
 {
@@ -35,6 +36,7 @@ namespace VevaciousPlusPlus
     tunnelPath( tunnelPath ),
     pathTemperature( tunnelPath.TemperatureValue() )
   {
+    std::cout<<"(JR) entering SplinePotential " << std::endl;
     // First we have to find the path false minimum. The base constructor
     // already set auxiliaryOfPathPanicVacuum to zero.
     tunnelPath.PutOnPathAt( fieldConfiguration,
@@ -58,6 +60,7 @@ namespace VevaciousPlusPlus
     // also by definition cannot end with an early panic vacuum.
     size_t const
     maximumIndexBeforeGivenTrueVauum( numberOfPotentialSegments - 2 );
+    std::cout <<"    (JR) before while loop" << std::endl;
     while( !energyBarrierWasResolved )
     {
       size_t const
@@ -117,7 +120,6 @@ namespace VevaciousPlusPlus
       }
       energyBarrierWasResolved
       = ( vacuaSeparationSquared >= minimumSquareDistanceBetweenPathVacua );
-
       if( !energyBarrierWasResolved )
       {
         // If the path panic vacuum wasn't sufficiently separated from the end
@@ -131,6 +133,7 @@ namespace VevaciousPlusPlus
         pathFalsePotential += finalPotential;
         continue;
       }
+      
 
       // If we get here, then the energy barrier was resolved, the path false
       // vacuum is at auxiliaryOfPathFalseVacuum along tunnelPath, the
@@ -163,6 +166,7 @@ namespace VevaciousPlusPlus
             - potentialValues[ numberOfNormalSegments + 1 ] )
           * inverseOfAuxiliaryStep * inverseOfAuxiliaryStep );
     }
+  std::cout <<"(JR) end of SplinePotential (after while) " << std::endl;
   }
 
   SplinePotential::~SplinePotential()
