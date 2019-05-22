@@ -118,8 +118,15 @@ namespace VevaciousPlusPlus
                             - fieldConfiguration[ fieldIndex ] );
         vacuaSeparationSquared += ( fieldDifference * fieldDifference );
       }
+
+      std::cout <<"    (EC) Vacua separation Sq = " << vacuaSeparationSquared << std::endl;
+
+      std::cout <<"    (EC) minimumSquareDistanceBetweenPathVacua = " << minimumSquareDistanceBetweenPathVacua << std::endl;
+
       energyBarrierWasResolved
       = ( vacuaSeparationSquared >= minimumSquareDistanceBetweenPathVacua );
+
+
       if( !energyBarrierWasResolved )
       {
         // If the path panic vacuum wasn't sufficiently separated from the end
