@@ -76,6 +76,7 @@ namespace VevaciousPlusPlus
       if( !tunnelingPossibleOnPath )
       {
         // There is no point in continuing if tunneling is not possible.
+        std::cout <<" (EC) RollForwardToPathFalseVacuum is the culprit" << std::endl;
         break;
       }
 
@@ -88,6 +89,7 @@ namespace VevaciousPlusPlus
       if( !tunnelingPossibleOnPath )
       {
         // There is no point in continuing if tunneling is not possible.
+        std::cout <<" (EC) CheckForEndOfPositiveBarrier is the culprit" << std::endl;
         break;
       }
 
@@ -174,6 +176,7 @@ namespace VevaciousPlusPlus
           * inverseOfAuxiliaryStep * inverseOfAuxiliaryStep );
     }
   std::cout <<"(JR) end of SplinePotential (after while) " << std::endl;
+
   }
 
   SplinePotential::~SplinePotential()
