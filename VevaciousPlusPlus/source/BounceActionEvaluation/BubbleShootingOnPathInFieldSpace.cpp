@@ -54,13 +54,13 @@ namespace VevaciousPlusPlus
 
     bubbleProfile->CalculateProfile( tunnelPath,pathPotential ); // (JR) supposed to fill auxiliaryProfile
 
-    std::cout<<"       (JR) after CalculateProfile"<< std::endl;
+    //std::cout<<"       (JR) after CalculateProfile"<< std::endl;
     bool const nonZeroTemperature( tunnelPath.NonZeroTemperature() );
 
-    std::cout<<"       (JR) before auxiliaryProfile"<< std::endl;
+    //std::cout<<"       (JR) before auxiliaryProfile"<< std::endl;
     std::vector< BubbleRadialValueDescription > const&  auxiliaryProfile( bubbleProfile->AuxiliaryProfile() );
-    std::cout<<"              (JR) 1st Size of auxiliaryProfile "<< auxiliaryProfile.size() << std::endl;
-    std::cout<<"       (JR) after auxiliaryProfile"<< std::endl;
+    //std::cout<<"              (JR) 1st Size of auxiliaryProfile "<< auxiliaryProfile.size() << std::endl;
+    //std::cout<<"       (JR) after auxiliaryProfile"<< std::endl;
 
     // We have a set of radial values r_i, path auxiliary values p(r_i), and
     // slopes dp/dr|_{r=r_i}, and can easily evaluate a set of "bounce action
@@ -95,14 +95,14 @@ namespace VevaciousPlusPlus
     //std::cout<<"              (JR) first item of auxiliaryProfile "<< auxiliaryProfile.at(0) << std::endl;
     std::cout<<"              (JR) 2nd Size of auxiliaryProfile "<< auxiliaryProfile.size() << " calling .front() on it now!!" << std::endl;
     double currentRadius( auxiliaryProfile.front().radialValue );
-    std::cout<<"       (JR) after auxiliaryProfile init"<< std::endl;
-    std::cout<<"       (JR) before current Volume init"<< std::endl;
+    //std::cout<<"       (JR) after auxiliaryProfile init"<< std::endl;
+    //std::cout<<"       (JR) before current Volume init"<< std::endl;
     double currentVolume( currentRadius * currentRadius * currentRadius );
-    std::cout<<"       (JR) after current Volume init"<< std::endl;
+    //std::cout<<"       (JR) after current Volume init"<< std::endl;
     double nextRadius( auxiliaryProfile.at(1).radialValue );
-    std::cout<<"       (JR) after nextRadius init"<< std::endl;
+    //std::cout<<"       (JR) after nextRadius init"<< std::endl;
     double nextVolume( nextRadius * nextRadius * nextRadius );
-    std::cout<<"       (JR) after double inits"<< std::endl;
+    //std::cout<<"       (JR) after double inits"<< std::endl;
     if( nonZeroTemperature )
     {
       currentVolume /= 3.0;
@@ -125,7 +125,7 @@ namespace VevaciousPlusPlus
     // + ( 0.5 * [solid angle] * B_{0} * nextVolume )
     // with the values currently in currentVolume and nextVolume, also with the
     // common factor of 0.5 * [solid angle] being left until after the loop.
-    std::cout<<"       (JR) before double bounceAction"<< std::endl;
+    //std::cout<<"       (JR) before double bounceAction"<< std::endl;
     double bounceAction( ( currentVolume
                   * pathPotential( bubbleProfile->AuxiliaryAtBubbleCenter() ) )
                   + ( nextVolume
@@ -133,7 +133,7 @@ namespace VevaciousPlusPlus
                                                tunnelPath,
                                               auxiliaryProfile.front() ) ) ) );
 
-    std::cout<<"       (JR) after double bounceAction"<< std::endl;
+    //std::cout<<"       (JR) after double bounceAction"<< std::endl;
     for( size_t radiusIndex( 1 );
          radiusIndex < ( auxiliaryProfile.size() - 1 );
          ++radiusIndex )
@@ -159,36 +159,36 @@ namespace VevaciousPlusPlus
       if( ( nextRadius - previousRadius )
           > ( radiusDifferenceThreshold * currentRadius ) )
       {
-        std::cout<<"                  (JR) in if"<< std::endl;
+        //std::cout<<"                  (JR) in if"<< std::endl;
         bounceAction
         += ( BounceActionDensity( pathPotential,
                                   tunnelPath,
                                   auxiliaryProfile.at(radiusIndex) )  // (JR) .at() for debug
             * ( nextVolume - previousVolume ) );
-        std::cout<<"                  (JR) end of if w. "<< radiusIndex << std::endl;
+        //std::cout<<"                  (JR) end of if w. "<< radiusIndex << std::endl;
       }
       else
       {
-        std::cout<<"                  (JR) in else"<< std::endl;
+        //std::cout<<"                  (JR) in else"<< std::endl;
         double currentArea( currentRadius * currentRadius );
-        std::cout<<"                  (JR) after currentArea"<< std::endl;
+        //std::cout<<"                  (JR) after currentArea"<< std::endl;
         if( !nonZeroTemperature )
         {
           currentArea *= currentRadius;
         }
-        std::cout<<"                  (JR) before BounceActionDensity"<< std::endl;
+        //std::cout<<"                  (JR) before BounceActionDensity"<< std::endl;
         bounceAction
         += ( BounceActionDensity( pathPotential,
                                   tunnelPath,
                                   auxiliaryProfile.at(radiusIndex) ) // (JR) .at() for debug
              * ( nextRadius - previousRadius )
              * currentArea );
-        std::cout<<"                  (JR) after BounceActionDensity w." << radiusIndex<< std::endl;
+        //std::cout<<"                  (JR) after BounceActionDensity w." << radiusIndex<< std::endl;
       }
       // The common factor of 0.5 * [solid angle] is being left until after the
       // loop.
     }
-    std::cout<<"       (JR) before double currentAuxiliary"<< std::endl;
+    //std::cout<<"       (JR) before double currentAuxiliary"<< std::endl;
     // Now we add the last shell:
     double const currentAuxiliary( auxiliaryProfile.back().auxiliaryValue );
     double kineticTerm( auxiliaryProfile.back().auxiliarySlope );
@@ -242,7 +242,7 @@ namespace VevaciousPlusPlus
     // e^( 2 - ((2 r)/R) ) to give the factor as simply 2.375 R^4.
     // (All solutions found with Mathematica 8.)
 
-    std::cout<<"       (JR) before double inverseScale"<< std::endl;
+    //std::cout<<"       (JR) before double inverseScale"<< std::endl;
     // This is b in the mathematics above.
     double const
     inverseScale( sqrt( pathPotential.SecondDerivativeAtFalseVacuum() ) );
@@ -296,7 +296,7 @@ namespace VevaciousPlusPlus
                                         * boost::math::double_constants::pi
                                         * boost::math::double_constants::pi );
     }
-    std::cout<<"       (JR) before return bubbleProfile"<< std::endl;
+    //std::cout<<"       (JR) before return bubbleProfile"<< std::endl;
     return bubbleProfile;
   }
 
