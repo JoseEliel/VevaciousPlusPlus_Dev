@@ -93,6 +93,13 @@ namespace VevaciousPlusPlus
     TunnelPath const& tunnelPath;
     double const pathTemperature;
 
+    // This is the threshold that is used to determine if a barrier between
+    // false and true vacuum is actually a barrier and not some numerical
+    // artifact. THe product of relativeBarrierThreshold and the biggest
+    // absolute value between two points in the potential is used as
+    // the threshold.
+    double const relativeBarrierThreshold;
+
 
     // This returns the potential on tunnelPath at auxiliaryValue, relative to
     // the potential at the path false vacuum being zero. It puts values into
@@ -198,11 +205,20 @@ namespace VevaciousPlusPlus
                               ( auxiliaryOfPathFalseVacuum + auxiliaryStep ) );
       potentialValues.front() = potentialFunction( fieldConfiguration,
                                                    pathTemperature );
-      if( potentialValues.front() > pathFalsePotential )
+      // Here we check whether the current potential value is higher than the
+      // potential value at the false vacuum. If so, it means there is a barrier
+      // as it has to go down eventually to reach the deeper panic vacuum.
+
+      double maxAbsofPotentialValues =
+              std::max(std::abs(potentialValues.front()), std::abs(pathFalsePotential));
+
+      if( potentialValues.front() > pathFalsePotential &&
+          potentialValues.front() - pathFalsePotential
+                                    > relativeBarrierThreshold * maxAbsofPotentialValues )
       {
-        potentialValues.front() -= pathFalsePotential;
-        return true;
-      }
+               potentialValues.front() -= pathFalsePotential;
+               return true;
+          }
       pathFalsePotential = potentialValues.front();
       auxiliaryOfPathFalseVacuum += auxiliaryStep;
       ++pathFalseVacuumIndex;

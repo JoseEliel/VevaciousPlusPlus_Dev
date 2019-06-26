@@ -34,7 +34,8 @@ namespace VevaciousPlusPlus
     fieldConfiguration( potentialFunction.NumberOfFieldVariables() ),
     potentialFunction( potentialFunction ),
     tunnelPath( tunnelPath ),
-    pathTemperature( tunnelPath.TemperatureValue() )
+    pathTemperature( tunnelPath.TemperatureValue() ),
+    relativeBarrierThreshold(1e-06)
   {
     std::cout<<"(JR) entering SplinePotential " << std::endl;
     // First we have to find the path false minimum. The base constructor
@@ -133,7 +134,7 @@ namespace VevaciousPlusPlus
       {
         // If the path panic vacuum wasn't sufficiently separated from the end
         // of tunnelPath, we set it to be the path false vacuum and iterate the
-        // loop again. The potential in finalPotential is actually relative to
+        // loop again. The potential i finalPotential is actually relative to
         // pathFalsePotential, hence adding it (it has a negative value) to
         // pathFalsePotential rather than setting pathFalsePotential to be
         // finalPotential.

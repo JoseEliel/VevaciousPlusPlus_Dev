@@ -8,6 +8,8 @@
 #ifndef ONEDIMENSIONALPOTENTIALALONGPATH_HPP_
 #define ONEDIMENSIONALPOTENTIALALONGPATH_HPP_
 
+#include <string>
+
 namespace VevaciousPlusPlus
 {
   // An instance of this class acts as the function of the potential energy
@@ -80,6 +82,8 @@ namespace VevaciousPlusPlus
     double ThresholdForNearPathPanic() const
     { return thresholdForNearPathPanic; }
 
+    // This is for debugging.
+    virtual std::string AsDebuggingString() const = 0;
 
   protected:
     // Numerical effects might lead to the path ends not being quite at the
