@@ -247,6 +247,12 @@ namespace VevaciousPlusPlus
         // numerator.
         integrationStartRadius = ( -auxiliaryPrecisionResolution
                / ( 2.0 * initialQuadraticCoefficient * integrationStepSize ) );
+        if(std::isinf(integrationStartRadius))
+        {
+
+          std::cout<<"           (EC) AAAHHH INFINITE LOOOOOOOOPY LOOP"
+
+        }
 
         initialConditions.at(0) = ( initialAuxiliary
                                    + ( initialQuadraticCoefficient
