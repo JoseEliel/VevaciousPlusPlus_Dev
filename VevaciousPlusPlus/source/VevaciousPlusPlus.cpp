@@ -623,6 +623,7 @@ namespace VevaciousPlusPlus
     // <PathToCosmotransitions>, <PathResolution>, <MaxInnerLoops>, and
     // <MaxOuterLoops>.
     std::string tunnelingStrategy( "ThermalThenQuantum" );
+    bool pathDeformation{true};
     double survivalProbabilityThreshold( 0.1 );
     unsigned int thermalStraightPathFitResolution( 5 );
     unsigned int temperatureAccuracy( 7 );
@@ -638,6 +639,9 @@ namespace VevaciousPlusPlus
       InterpretElementIfNameMatches( xmlParser,
                                      "TunnelingStrategy",
                                      tunnelingStrategy );
+      InterpretElementIfNameMatches( xmlParser,
+                                     "PathDeformation",
+                                     pathDeformation );
       InterpretElementIfNameMatches( xmlParser,
                                      "SurvivalProbabilityThreshold",
                                      survivalProbabilityThreshold );
@@ -722,6 +726,7 @@ namespace VevaciousPlusPlus
     std::string bouncePotentialFitClass( "BubbleShootingOnSpline" );
     std::string bouncePotentialFitArguments( "" );
     std::string tunnelingStrategy( "ThermalThenQuantum" );
+    bool pathDeformation{true};
     double survivalProbabilityThreshold( 0.1 );
     unsigned int thermalIntegrationResolution( 5 );
     unsigned int temperatureAccuracy( 7 );
@@ -736,6 +741,9 @@ namespace VevaciousPlusPlus
       InterpretElementIfNameMatches( xmlParser,
                                      "TunnelingStrategy",
                                      tunnelingStrategy );
+      InterpretElementIfNameMatches( xmlParser,
+                                     "PathDeformation",
+                                     pathDeformation );
       InterpretElementIfNameMatches( xmlParser,
                                      "SurvivalProbabilityThreshold",
                                      survivalProbabilityThreshold );
@@ -783,6 +791,7 @@ namespace VevaciousPlusPlus
     return Utils::make_unique<BounceAlongPathWithThreshold>( std::move(pathFinders),
                                              std::move(bounceActionCalculator),
                                InterpretTunnelingStrategy( tunnelingStrategy ),
+                                             pathDeformation,
                                              survivalProbabilityThreshold,
                                              thermalIntegrationResolution,
                                              temperatureAccuracy,

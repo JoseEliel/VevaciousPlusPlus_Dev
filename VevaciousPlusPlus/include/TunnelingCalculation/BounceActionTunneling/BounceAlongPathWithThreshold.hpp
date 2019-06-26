@@ -34,6 +34,7 @@ namespace VevaciousPlusPlus
                            std::vector< std::unique_ptr<BouncePathFinder> > pathFinders,
                                 std::unique_ptr<BounceActionCalculator> actionCalculator,
                 TunnelingCalculator::TunnelingStrategy const tunnelingStrategy,
+                                  bool const pathDeformation,
                                   double const survivalProbabilityThreshold,
                                unsigned int const thermalIntegrationResolution,
                                   unsigned int const temperatureAccuracy,
@@ -49,7 +50,7 @@ namespace VevaciousPlusPlus
     unsigned int thermalIntegrationResolution;
     unsigned int const pathPotentialResolution;
     unsigned int const pathFindingTimeout;
-
+    bool const pathDeformation;
 
     // This returns either the dimensionless bounce action integrated over four
     // dimensions (for zero temperature) or the dimensionful bounce action

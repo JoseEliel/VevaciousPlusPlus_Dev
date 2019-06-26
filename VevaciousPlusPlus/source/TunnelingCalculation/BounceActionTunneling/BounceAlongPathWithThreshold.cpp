@@ -14,6 +14,7 @@ namespace VevaciousPlusPlus
                            std::vector< std::unique_ptr<BouncePathFinder> > pathFinders,
                                 std::unique_ptr<BounceActionCalculator> actionCalculator,
                 TunnelingCalculator::TunnelingStrategy const tunnelingStrategy,
+                                      bool const pathDeformation,
                                      double const survivalProbabilityThreshold,
                                unsigned int const thermalIntegrationResolution,
                                         unsigned int const temperatureAccuracy,
@@ -26,6 +27,7 @@ namespace VevaciousPlusPlus
                           vacuumSeparationFraction ),
     pathFinders( std::move(pathFinders) ),
     actionCalculator( std::move(actionCalculator) ),
+    pathDeformation( pathDeformation ),
     thermalIntegrationResolution( thermalIntegrationResolution ),
     pathPotentialResolution( pathPotentialResolution ),
     pathFindingTimeout( pathFindingTimeout )
@@ -270,11 +272,36 @@ namespace VevaciousPlusPlus
       return bounceAction;
     }
 
+    if( !pathDeformation )
+    {
+      std::cout
+              << std::endl
+              << "No path deformation. Taking straight path action.";
+      std::cout << std::endl;
+      std::cout
+              << std::endl
+              << pathDeformation ;
+      std::cout << std::endl;
+      double const bounceAction( bestBubble->BounceAction() );
+      std::cout<<"(JR) will delete pointer at "<< bestBubble << std::endl;
+      delete bestBubble;
+      bestBubble=NULL;
+      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
+      delete bestPath;
+      bestPath=NULL;
+      return bounceAction;
+    }
+
     // Declaring variables for timing
     time_t pathFindingStartTime;
     time_t currentTime;
     // Setting the starting time of the path finding
     time( &pathFindingStartTime );
+
+
+
+
+
 
     for( auto pathFinder( pathFinders.begin() );
          pathFinder < pathFinders.end();
