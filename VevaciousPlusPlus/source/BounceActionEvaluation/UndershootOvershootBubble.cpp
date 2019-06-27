@@ -10,7 +10,7 @@
 namespace VevaciousPlusPlus
 {
   double const
-  UndershootOvershootBubble::auxiliaryPrecisionResolution( 1.0e-6 );
+  UndershootOvershootBubble::auxiliaryPrecisionResolution( 1.0e-7 );
 
   UndershootOvershootBubble::UndershootOvershootBubble(
                                        double const initialIntegrationStepSize,
@@ -82,10 +82,10 @@ namespace VevaciousPlusPlus
     {
       undershootAuxiliary -= pathPotential.AuxiliaryOfPathPanicVacuum();
     }
-    if( overshootAuxiliary >= pathPotential.ThresholdForNearPathPanic() )
-    {
-      overshootAuxiliary -= pathPotential.AuxiliaryOfPathPanicVacuum();
-    }
+//    if( overshootAuxiliary >= pathPotential.ThresholdForNearPathPanic() )
+//    {
+//      overshootAuxiliary -= pathPotential.AuxiliaryOfPathPanicVacuum();
+//    }
 
     // This loop is broken out of if the shoot attempt seems to have been close
     // enough that the integration would take too long to find an overshoot or
@@ -249,7 +249,6 @@ namespace VevaciousPlusPlus
                / ( 2.0 * initialQuadraticCoefficient * integrationStepSize ) );
         if(std::isinf(integrationStartRadius))
         {
-
           // If odeint is misbehaving and bogus profiles are being given,
           // we get here. This gives the error and prints debugging info.
           std::stringstream errorBuilder;
@@ -369,14 +368,13 @@ namespace VevaciousPlusPlus
       }
       else
       {
-        std::cout<<"\n !!!!! (JR) if you can read this it should break !!!!!!!! \n"<<std::endl;
-        // If we ever end up here, it means that at radialIndex 0, either an under/overshoot was
-        // detected. This is a signal that the initial conditions given to odeint were bad.
-        // In particular, this happens when e.g. integrationStartRadius is very large. This can be
-        // caused by an extremely small radius resolution set by the user.
+        // Here we check whether the initial radius was so large that we end up at step 0 in a definite
+        // undershoot/overshoot. In that case, we go back and set the initial step radius to be smaller.
+        // this happens in ShootFromInitialConditions.
         badInitialConditions = true;
-
-
+        std::cout<< " Rescaling initial integration radius in under/overshoot to help with"
+                 << " detected numerical problems. Shooting again now."<<std::endl;
+        
       }
 
     }

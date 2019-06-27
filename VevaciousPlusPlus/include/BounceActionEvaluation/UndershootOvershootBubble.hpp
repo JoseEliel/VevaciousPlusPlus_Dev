@@ -246,20 +246,20 @@ namespace VevaciousPlusPlus
 
     if(badInitialConditions)
     {
-      // If odeint is misbehaving and bogus profiles are being given,
-      // we get here. This gives the error and prints debugging info.
-      std::stringstream errorBuilder;
-      errorBuilder
-              << std::endl
-              << " The initial conditions for the numerical integration of "
-              << " the bubble profile lead to numerical problems. \n"
-              << " Please check your options in your tunneling calculation intialization XML file."
-              << " Try increasing the <RadialResolution> option, as too small steps are known to cause"
-              << " problem with initial conditions given to odeint.\n"
-              << " Below you will find debugging information, including the potential along the current"
-              << " path in Mathematica form.\n"
-              << pathPotential.AsDebuggingString() << std::endl;
-      throw std::runtime_error( errorBuilder.str() );
+      // Here we re-scale the radius if the initial conditions lead
+      // to a definite over/undershoot happening already at the first
+      // step in the previous integration.
+      odeintProfile.clear();
+      OdeintBubbleDerivatives bubbleDerivatives( pathPotential,
+                                                 tunnelPath );
+      OdeintBubbleObserver bubbleObserver( odeintProfile );
+      boost::numeric::odeint::integrate( bubbleDerivatives,
+                                         initialConditions,
+                                         integrationStartRadius*0.99 ,
+                                         integrationEndRadius,
+                                         integrationStepSize,
+                                         bubbleObserver );
+      RecordFromOdeintProfile( tunnelPath );
 
     }
   }
