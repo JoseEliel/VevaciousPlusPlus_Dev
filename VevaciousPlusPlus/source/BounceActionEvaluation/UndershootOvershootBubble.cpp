@@ -359,7 +359,7 @@ namespace VevaciousPlusPlus
     {
       if( radialIndex > 1 ) // (JR) track error: not entered in crash
       {
-
+        badInitialConditions = false;
         if(add_to_aux==false){std::cout<<"                     (JR) 1. appended vals to Aux profile"<<std::endl;add_to_aux=true;}
 
         auxiliaryProfile.insert( auxiliaryProfile.end(),
@@ -374,7 +374,7 @@ namespace VevaciousPlusPlus
         badInitialConditions = true;
         std::cout<< " Rescaling initial integration radius in under/overshoot to help with"
                  << " detected numerical problems. Shooting again now."<<std::endl;
-        
+
       }
 
     }
