@@ -380,7 +380,8 @@ namespace VevaciousPlusPlus
     }
     else
     {
-         if(add_to_aux2==false){std::cout<<"                     (JR) 2. appended vals to Aux profile"<<std::endl;add_to_aux2=true;}
+      badInitialConditions = false;
+      if(add_to_aux2==false){std::cout<<"                     (JR) 2. appended vals to Aux profile"<<std::endl;add_to_aux2=true;}
       auxiliaryProfile.insert( auxiliaryProfile.end(),
                                ( odeintProfile.begin() + 1 ),
                                odeintProfile.end() );
