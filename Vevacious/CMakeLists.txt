@@ -18,7 +18,11 @@ project(VevaciousPlusPlus)
 
 SET(EXECUTABLE_OUTPUT_PATH ${PROJECT_SOURCE_DIR}/bin)
 
-cmake_policy(SET CMP0042 NEW)
+if(POLICY ${CMP0042})
+  cmake_policy(SET ${CMP0042} NEW)
+else()
+  set(MACOSX_RPATH ON)
+endif()
 
 #############################################################################
 # CHECKS
@@ -73,7 +77,7 @@ set(Minuit_dl "https://www.cern.ch/mathlibs/sw/5_34_14/Minuit2/Minuit2-5.34.14.t
 set(Minuit_dir "${PROJECT_SOURCE_DIR}/../${Minuit_name}/${Minuit_ver}")
 ExternalProject_Add(${Minuit_name}_${Minuit_ver}
             #DOWNLOAD_COMMAND wget -qO- ${Minuit_dl} | tar xvz -C ${Minuit_dir} --strip-components 1
-            URL ${Minuit_dl} 
+            URL ${Minuit_dl}
             SOURCE_DIR ${Minuit_dir}
             BUILD_IN_SOURCE 1
             CONFIGURE_COMMAND ./configure --prefix=${Minuit_dir} CC=${CMAKE_C_COMPILER} CXX=${CMAKE_CXX_COMPILER} CFLAGS=${CMAKE_C_FLAGS} CXXFLAGS=${CMAKE_CXX_FLAGS}
@@ -95,7 +99,7 @@ set(dir "${PROJECT_SOURCE_DIR}/../${name}/${hom4ps_ver}")
 
 ExternalProject_Add(${name}_${hom4ps_ver}
         #DOWNLOAD_COMMAND wget -qO- ${dl} | tar xvz -C ${dir} --strip-components 1
-        URL ${dl} 
+        URL ${dl}
         SOURCE_DIR ${dir}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ""
@@ -118,7 +122,7 @@ set(dir "${PROJECT_SOURCE_DIR}/../${name}/${phc_ver}")
 
 ExternalProject_Add(${name}_${phc_ver}
         #DOWNLOAD_COMMAND wget -qO- ${dl} | tar xvz -C ${dir}
-        URL ${dl} 
+        URL ${dl}
         SOURCE_DIR ${dir}
         BUILD_IN_SOURCE 1
         CONFIGURE_COMMAND ""
