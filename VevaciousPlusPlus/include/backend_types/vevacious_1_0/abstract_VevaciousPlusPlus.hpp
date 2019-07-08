@@ -39,7 +39,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
                 virtual void WriteResultsAsXmlFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >&) =0;
     
                 virtual ::std::basic_string<char, std::char_traits<char>, std::allocator<char> > GetResultsAsString() =0;
-    
+                
+                virtual ::std::vector<double> GetThermalThresholdAndActions() = 0;
+                
+                virtual ::std::vector<double> GetThresholdAndActions() = 0;
+
                 virtual double GetLifetimeInSeconds() = 0;
 
                 virtual double GetThermalProbability()  = 0;
