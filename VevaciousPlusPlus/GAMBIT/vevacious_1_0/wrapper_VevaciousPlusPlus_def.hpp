@@ -41,6 +41,16 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
         {
             return get_BEptr()->GetThermalProbability();
         }
+
+         inline ::std::vector<double> VevaciousPlusPlus::GetThresholdAndActions()
+        {
+            return get_BEptr()->GetThresholdAndActions();
+        }
+
+         inline ::std::vector<double> VevaciousPlusPlus::GetThermalThresholdAndActions()
+        {
+            return get_BEptr()->GetThermalThresholdAndActions();
+        }
                
         inline void VevaciousPlusPlus::AppendResultsToLhaFile(const ::std::basic_string<char, std::char_traits<char>, std::allocator<char> >& lhaFilename, const bool writeWarnings)
         {
