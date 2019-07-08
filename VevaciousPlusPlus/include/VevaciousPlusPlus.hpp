@@ -136,6 +136,12 @@ namespace VevaciousPlusPlus
      // This gives the upper bound on thermal survival probability
      double GetThermalProbability();
 
+    // This gives the threshold and the best actions for each path finder
+
+    std::vector< double > GetThresholdAndActions();
+
+    std::vector< double > GetThermalThresholdAndActions();
+
     // This writes the results as an SLHA file.
     void AppendResultsToLhaFile( std::string const& lhaFilename,
                                  bool const writeWarnings = true );
@@ -432,6 +438,22 @@ namespace VevaciousPlusPlus
         return -1;
       }
     }
+
+
+
+    inline
+    std::vector<double> VevaciousPlusPlus::GetThresholdAndActions(){
+
+      return tunnelingCalculator->GetThresholdAndActions();
+
+    }
+
+    inline
+    std::vector<double> VevaciousPlusPlus::GetThermalThresholdAndActions(){
+
+      return tunnelingCalculator->GetThermalThresholdAndActions();
+    }
+
 
       // This reads the current element of outerParser and if its name matches
   // elementName, it puts the contents of the child element <ClassType> into

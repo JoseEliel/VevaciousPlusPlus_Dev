@@ -244,6 +244,14 @@ namespace VevaciousPlusPlus
     if( bestPath->NonZeroTemperature() )
     {
       std::cout << " GeV";
+
+      thermalThresholdAndActions.push_back(actionThreshold);
+      thermalThresholdAndActions.push_back(bestBubble->BounceAction());
+    }
+    else
+    {
+      thresholdAndActions.push_back(actionThreshold);
+      thresholdAndActions.push_back(bestBubble->BounceAction());
     }
     std::cout << ", threshold is " << actionThreshold;
     if( bestPath->NonZeroTemperature() )
@@ -445,6 +453,16 @@ namespace VevaciousPlusPlus
       std::cout<<"(JR) will delete pointer at "<< pathDeleter << std::endl;
       delete pathDeleter;
       pathDeleter = NULL;
+
+      // Recodring the best action for each pathfinder
+      if( bestPath->NonZeroTemperature() )
+      {
+        thermalThresholdAndActions.push_back(bestBubble->BounceAction());
+      }
+      else
+      {
+        thresholdAndActions.push_back(bestBubble->BounceAction());
+      }
 
       // We don't bother with the rest of the path finders if the action has
       // already dropped below the threshold.
