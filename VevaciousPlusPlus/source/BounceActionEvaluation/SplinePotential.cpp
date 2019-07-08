@@ -61,7 +61,7 @@ namespace VevaciousPlusPlus
     // also by definition cannot end with an early panic vacuum.
     size_t const
     maximumIndexBeforeGivenTrueVauum( numberOfPotentialSegments - 2 );
-    std::cout <<"    (JR) before while loop" << std::endl;
+//    std::cout <<"    (JR) before while loop" << std::endl;
     while( !energyBarrierWasResolved )
     {
       size_t const
@@ -122,9 +122,9 @@ namespace VevaciousPlusPlus
         vacuaSeparationSquared += ( fieldDifference * fieldDifference );
       }
 
-      std::cout <<"    (EC) Vacua separation Sq = " << vacuaSeparationSquared << std::endl;
+//      std::cout <<"    (EC) Vacua separation Sq = " << vacuaSeparationSquared << std::endl;
 
-      std::cout <<"    (EC) minimumSquareDistanceBetweenPathVacua = " << minimumSquareDistanceBetweenPathVacua << std::endl;
+//      std::cout <<"    (EC) minimumSquareDistanceBetweenPathVacua = " << minimumSquareDistanceBetweenPathVacua << std::endl;
 
       energyBarrierWasResolved
       = ( vacuaSeparationSquared >= minimumSquareDistanceBetweenPathVacua );

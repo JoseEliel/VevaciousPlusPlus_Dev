@@ -91,7 +91,7 @@ namespace VevaciousPlusPlus
 
     double previousRadius( 0.0 );
     double previousVolume( 0.0 );
-    std::cout<<"       (JR) before currentRadius init"<< std::endl;
+    //std::cout<<"       (JR) before currentRadius init"<< std::endl;
     //std::cout<<"              (JR) first item of auxiliaryProfile "<< auxiliaryProfile.at(0) << std::endl;
     std::cout<<"              (JR) 2nd Size of auxiliaryProfile "<< auxiliaryProfile.size() << " calling .front() on it now!!" << std::endl;
     double currentRadius( auxiliaryProfile.front().radialValue );

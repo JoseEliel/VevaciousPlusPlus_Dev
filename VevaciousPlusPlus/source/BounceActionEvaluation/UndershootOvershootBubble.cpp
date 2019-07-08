@@ -90,7 +90,7 @@ namespace VevaciousPlusPlus
     // This loop is broken out of if the shoot attempt seems to have been close
     // enough that the integration would take too long to find an overshoot or
     // undershoot, or that the shot was dead on.
-    std::cout<<"                     (JR) Before while loop currentShotGoodEnough and shootAttemptsLeft  "<<currentShotGoodEnough<<"  " << shootAttemptsLeft<< std::endl;
+//    std::cout<<"                     (JR) Before while loop currentShotGoodEnough and shootAttemptsLeft  "<<currentShotGoodEnough<<"  " << shootAttemptsLeft<< std::endl;
     while( !currentShotGoodEnough && ( shootAttemptsLeft > 0 ) )
     {
       worthIntegratingFurther = true;
@@ -319,12 +319,12 @@ namespace VevaciousPlusPlus
   void UndershootOvershootBubble::RecordFromOdeintProfile(
                                                  TunnelPath const& tunnelPath )
   {
-    std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
+ //   std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
     // We start from the beginning of odeintProfile so that we record only as
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
     size_t radialIndex( 0 );
-    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
+//    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
       // If the shot has gone past the false vacuum, it was definitely an
@@ -335,7 +335,7 @@ namespace VevaciousPlusPlus
         overshootAuxiliary = initialAuxiliary;
         worthIntegratingFurther = false;
         currentShotGoodEnough = false;
-        std::cout<<"                                               (JR) 1st Break out of while loop with radial index "<< radialIndex<< std::endl;
+ //       std::cout<<"                                               (JR) 1st Break out of while loop with radial index "<< radialIndex<< std::endl;
         break;
       }
       // If the shot is rolling backwards without having yet reached the false
@@ -346,13 +346,13 @@ namespace VevaciousPlusPlus
         worthIntegratingFurther = false;
         currentShotGoodEnough = false;
         break;
-        std::cout<<"                                               (JR) 2nd Break out of while loop with radial index "<< radialIndex<< std::endl;
+ //       std::cout<<"                                               (JR) 2nd Break out of while loop with radial index "<< radialIndex<< std::endl;
       }
       ++radialIndex;
     }
     // (JR) track error: crashes: radial index = 0 
 
-    std::cout<<"                                     (JR) After while loop, odeintProfile size"<< odeintProfile.size()<< " radialIndex "<< radialIndex << "\n" << std::endl;
+//    std::cout<<"                                     (JR) After while loop, odeintProfile size"<< odeintProfile.size()<< " radialIndex "<< radialIndex << "\n" << std::endl;
     bool add_to_aux = false; // (JR) added to check if auxiliaryProfile is filled
     bool add_to_aux2 = false; // (JR) added to check if auxiliaryProfile is filled
     if( radialIndex < odeintProfile.size() )    
@@ -360,7 +360,7 @@ namespace VevaciousPlusPlus
       if( radialIndex > 1 ) // (JR) track error: not entered in crash
       {
         badInitialConditions = false;
-        if(add_to_aux==false){std::cout<<"                     (JR) 1. appended vals to Aux profile"<<std::endl;add_to_aux=true;}
+//       if(add_to_aux==false){std::cout<<"                     (JR) 1. appended vals to Aux profile"<<std::endl;add_to_aux=true;}
 
         auxiliaryProfile.insert( auxiliaryProfile.end(),
                                  ( odeintProfile.begin() + 1 ),
@@ -381,7 +381,7 @@ namespace VevaciousPlusPlus
     else
     {
       badInitialConditions = false;
-      if(add_to_aux2==false){std::cout<<"                     (JR) 2. appended vals to Aux profile"<<std::endl;add_to_aux2=true;}
+ //     if(add_to_aux2==false){std::cout<<"                     (JR) 2. appended vals to Aux profile"<<std::endl;add_to_aux2=true;}
       auxiliaryProfile.insert( auxiliaryProfile.end(),
                                ( odeintProfile.begin() + 1 ),
                                odeintProfile.end() );
