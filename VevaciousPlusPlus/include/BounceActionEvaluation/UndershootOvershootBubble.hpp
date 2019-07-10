@@ -254,10 +254,10 @@ namespace VevaciousPlusPlus
                                                  tunnelPath );
       OdeintBubbleObserver bubbleObserver( odeintProfile );
 
-      double newintegrationStartRadius =  0.99 * integrationStartRadius;
+      double newintegrationStartRadius =  0.999 * integrationStartRadius;
       double newintegrationEndRadius = 2.0 * newintegrationStartRadius;
 
-      std::cout << "Trying rescaled intial radius " << newintegrationStartRadius << <<std::endl
+      std::cout << "Trying rescaled intial radius " << newintegrationStartRadius << std::endl;
 
       boost::numeric::odeint::integrate( bubbleDerivatives,
                                          initialConditions,
