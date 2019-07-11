@@ -246,25 +246,25 @@ namespace VevaciousPlusPlus
 
     if(badInitialConditions)
     {
-      // Here we re-scale the radii if the initial conditions lead
-      // to a definite over/undershoot happening already at the first
-      // step in the previous integration.
+      // Here we re-shoot from the bubble's center (starting at r = integrationStepSize)
+      // as a definite over/undershoot is already happening at the first
+      // step in the previous integration. So we throw away time-saving measures
+      // and integrate the complete bubble profile up to integrationEndRadius.
+
       odeintProfile.clear();
       OdeintBubbleDerivatives bubbleDerivatives( pathPotential,
                                                  tunnelPath );
       OdeintBubbleObserver bubbleObserver( odeintProfile );
 
-      double newintegrationStartRadius =  0.999 * integrationStartRadius;
-      double newintegrationEndRadius = 2.0 * newintegrationStartRadius;
-
-      std::cout << "Trying rescaled intial radius " << newintegrationStartRadius << std::endl;
+      double newIntegrationStartRadius = integrationStepSize;
 
       boost::numeric::odeint::integrate( bubbleDerivatives,
                                          initialConditions,
-                                         newintegrationStartRadius,
-                                         newintegrationEndRadius,
+                                         newIntegrationStartRadius,
+                                         integrationEndRadius,
                                          integrationStepSize,
                                          bubbleObserver );
+
       RecordFromOdeintProfile( tunnelPath );
 
     }
