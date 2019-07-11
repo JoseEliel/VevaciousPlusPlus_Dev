@@ -66,7 +66,6 @@ namespace VevaciousPlusPlus
     {
       std::cout<<"                            (JR) in if NonZeroTemperature"<< std::endl;
       twoPlusTwiceDampingFactor = 6.0;
-      std::cout << tunnelPathcl.AsDebuggingString() << std::endl;
     }
 
     unsigned int shootAttemptsLeft( allowShootingAttempts );
