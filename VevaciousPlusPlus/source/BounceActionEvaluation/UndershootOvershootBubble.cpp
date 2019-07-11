@@ -66,6 +66,7 @@ namespace VevaciousPlusPlus
     {
       std::cout<<"                            (JR) in if NonZeroTemperature"<< std::endl;
       twoPlusTwiceDampingFactor = 6.0;
+      std::cout << tunnelPathcl.AsDebuggingString() << std::endl;
     }
 
     unsigned int shootAttemptsLeft( allowShootingAttempts );
@@ -257,8 +258,8 @@ namespace VevaciousPlusPlus
                   << " The initial conditions for the numerical integration of "
                   << " the bubble profile lead to numerical problems. \n"
                   << " Please check your options in your tunneling calculation intialization XML file."
-                  << " Try increasing the <RadialResolution> option, as too small steps are known to cause"
-                  << " problem with initial conditions given to odeint.\n"
+                  << " Try increasing the <RadialResolution> option, as too large steps are known to cause"
+                  << " problems with initial conditions given to odeint.\n"
                   << " This particular instance has to do with the initial radius given to odeint being infinity. \n"
                   << " Below you will find debugging information, including the potential along the current"
                   << " path in Mathematica form.\n"
@@ -369,10 +370,28 @@ namespace VevaciousPlusPlus
       else
       {
         // Here we check whether the initial radius was so large that we end up at step 0 in a definite
-        // undershoot/overshoot. In that case, we go back and set the initial step radius to be smaller.
+        // undershoot/overshoot. In that case, we go back and set the initial step radius to be at the center
+        // (in reality we set it to be the integration stepsize.
         // this happens in ShootFromInitialConditions.
-        badInitialConditions = true;
-        std::cout<< " Rescaling initial integration radius in under/overshoot to help with"
+
+        if(badInitialConditions)
+        {
+         // If we are here, we tried to fix this before, it did not work so we throw an error.
+
+          std::stringstream errorBuilder;
+          errorBuilder
+                  << std::endl
+                  << " Setting integration start radius to the center of the bubble "
+                  << " but still detected numerical problems. "<<std::endl;
+
+          throw std::runtime_error( errorBuilder.str() );
+        }
+        else
+        {
+          badInitialConditions = true;
+        }
+
+        std::cout<< " Setting integration start radius to the center of the bubble in under/overshoot to help with"
                  << " detected numerical problems. Shooting again now."<<std::endl;
 
       }
