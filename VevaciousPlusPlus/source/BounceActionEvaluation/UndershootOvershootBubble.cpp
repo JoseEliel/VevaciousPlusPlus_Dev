@@ -10,7 +10,7 @@
 namespace VevaciousPlusPlus
 {
   double const
-  UndershootOvershootBubble::auxiliaryPrecisionResolution( 1.0e-7 );
+  UndershootOvershootBubble::auxiliaryPrecisionResolution( 1.0e-6 );
 
   UndershootOvershootBubble::UndershootOvershootBubble(
                                        double const initialIntegrationStepSize,
@@ -68,6 +68,8 @@ namespace VevaciousPlusPlus
       twoPlusTwiceDampingFactor = 6.0;
     }
 
+
+   // std::cout << pathPotential.AsDebuggingString() << std::endl;
     unsigned int shootAttemptsLeft( allowShootingAttempts );
 
     undershootAuxiliary = pathPotential.DefiniteUndershootAuxiliary();
@@ -319,12 +321,12 @@ namespace VevaciousPlusPlus
   void UndershootOvershootBubble::RecordFromOdeintProfile(
                                                  TunnelPath const& tunnelPath )
   {
- //   std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
+    std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
     // We start from the beginning of odeintProfile so that we record only as
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
     size_t radialIndex( 0 );
-//    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
+    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
       // If the shot has gone past the false vacuum, it was definitely an
@@ -376,11 +378,11 @@ namespace VevaciousPlusPlus
         if(badInitialConditions)
         {
          // If we are here, we tried to fix this before, it did not work so we throw an error.
-
+          std::cout<<"  BAD CONDITIONS TWICE" << std::endl;
           std::stringstream errorBuilder;
           errorBuilder
                   << std::endl
-                  << " Setting integration start radius to the center of the bubble "
+                  << " Set the integration start radius to the center of the bubble "
                   << " but still detected numerical problems. "<<std::endl;
 
           throw std::runtime_error( errorBuilder.str() );

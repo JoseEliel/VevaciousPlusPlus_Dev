@@ -258,6 +258,8 @@ namespace VevaciousPlusPlus
 
       double newIntegrationStartRadius = integrationStepSize;
 
+      try
+      {
       boost::numeric::odeint::integrate( bubbleDerivatives,
                                          initialConditions,
                                          newIntegrationStartRadius,
@@ -265,7 +267,20 @@ namespace VevaciousPlusPlus
                                          integrationStepSize,
                                          bubbleObserver );
 
+       
       RecordFromOdeintProfile( tunnelPath );
+
+      }
+      catch(const std::exception& E)
+      {
+          std::stringstream errorBuilder;
+          errorBuilder
+                  << std::endl
+                  << " Set the integration start radius to the center of the bubble "
+                  << " but still detected numerical problems with odeint. "<<std::endl;
+
+          throw std::runtime_error( errorBuilder.str() );
+      }
 
     }
   }
