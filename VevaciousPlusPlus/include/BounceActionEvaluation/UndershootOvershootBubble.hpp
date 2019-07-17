@@ -236,13 +236,26 @@ namespace VevaciousPlusPlus
     OdeintBubbleDerivatives bubbleDerivatives( pathPotential,
                                                tunnelPath );
     OdeintBubbleObserver bubbleObserver( odeintProfile );
-    boost::numeric::odeint::integrate( bubbleDerivatives,
-                                       initialConditions,
-                                       integrationStartRadius,
-                                       integrationEndRadius,
-                                       integrationStepSize,
-                                       bubbleObserver );
-    RecordFromOdeintProfile( tunnelPath );
+    try {
+            boost::numeric::odeint::integrate( bubbleDerivatives,
+                                               initialConditions,
+                                               integrationStartRadius,
+                                               integrationEndRadius,
+                                               integrationStepSize,
+                                               bubbleObserver );
+            RecordFromOdeintProfile( tunnelPath );
+        }
+    catch(const std::exception& E)
+        {
+            std::stringstream errorBuilder;
+            errorBuilder
+                    << std::endl
+                    << " Numerical problems with odeint. Failed to integrate during over/undershoot procedure. "<<std::endl;
+
+            throw std::runtime_error( errorBuilder.str() );
+        }
+
+
 
     if(badInitialConditions)
     {
