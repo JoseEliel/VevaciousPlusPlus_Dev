@@ -228,7 +228,7 @@ namespace VevaciousPlusPlus
       << " should be sufficient to exclude the parameter point).";
       WarningLogger::LogWarning( warningBuilder.str() );
       std::cout<< "(JR) In Mem leak (?) if loop BounceAlongPathWithThreshold "<< std::endl;
-//      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
+      std::cout<<"(JR) will delete bestPath at "<< bestPath << std::endl;
       delete bestPath;
       return 0.0;
     }
@@ -271,10 +271,10 @@ namespace VevaciousPlusPlus
               << " for further path improvements.";
       std::cout << std::endl;
       double const bounceAction( bestBubble->BounceAction() );
-//      std::cout<<"(JR) will delete pointer at "<< bestBubble << std::endl;
+      std::cout<<"(JR) will delete bestBubble at "<< bestBubble << std::endl;
       delete bestBubble;
       bestBubble=NULL;
-//      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
+      std::cout<<"(JR) will delete bestPath at "<< bestPath << std::endl;
       delete bestPath;
       bestPath=NULL;
       return bounceAction;
@@ -291,10 +291,10 @@ namespace VevaciousPlusPlus
               << pathDeformation ;
       std::cout << std::endl;
       double const bounceAction( bestBubble->BounceAction() );
-//      std::cout<<"(JR) will delete pointer at "<< bestBubble << std::endl;
+      std::cout<<"(JR) will delete bestBubble at "<< bestBubble << std::endl;
       delete bestBubble;
       bestBubble=NULL;
-//      std::cout<<"(JR) will delete pointer at "<< bestPath << std::endl;
+      std::cout<<"(JR) will delete bestPath at "<< bestPath << std::endl;
       delete bestPath;
       bestPath=NULL;
       return bounceAction;
