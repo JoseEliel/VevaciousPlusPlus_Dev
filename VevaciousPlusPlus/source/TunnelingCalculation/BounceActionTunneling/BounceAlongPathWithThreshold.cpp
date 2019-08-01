@@ -2,7 +2,8 @@
  * BounceAlongPathWithThreshold.cpp
  *
  *  Created on: Jul 1, 2014
- *      Author: Ben O'Leary (benjamin.oleary@gmail.com)
+ *      Authors: Ben O'Leary (benjamin.oleary@gmail.com)
+ *               José Eliel Camargo-Molina (eliel@camargo-molina.com)
  */
 
 #include "TunnelingCalculation/BounceActionTunneling/BounceAlongPathWithThreshold.hpp"
