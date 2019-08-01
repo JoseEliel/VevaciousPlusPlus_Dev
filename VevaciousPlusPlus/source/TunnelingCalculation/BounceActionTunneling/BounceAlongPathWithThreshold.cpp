@@ -10,497 +10,438 @@
 namespace VevaciousPlusPlus
 {
 
-  BounceAlongPathWithThreshold::BounceAlongPathWithThreshold(
-                           std::vector< std::unique_ptr<BouncePathFinder> > pathFinders,
-                                std::unique_ptr<BounceActionCalculator> actionCalculator,
-                TunnelingCalculator::TunnelingStrategy const tunnelingStrategy,
-                                      bool const pathDeformation,
-                                     double const survivalProbabilityThreshold,
-                               unsigned int const thermalIntegrationResolution,
-                                        unsigned int const temperatureAccuracy,
-                                    unsigned int const pathPotentialResolution,
-                                    unsigned int const pathFindingTimeout,
-                                      double const vacuumSeparationFraction ) :
-    BounceActionTunneler( tunnelingStrategy,
-                          survivalProbabilityThreshold,
-                          temperatureAccuracy,
-                          vacuumSeparationFraction ),
-    pathFinders( std::move(pathFinders) ),
-    actionCalculator( std::move(actionCalculator) ),
-    pathDeformation( pathDeformation ),
-    thermalIntegrationResolution( thermalIntegrationResolution ),
-    pathPotentialResolution( pathPotentialResolution ),
-    pathFindingTimeout( pathFindingTimeout )
-  {
-    // This constructor is just an initialization list.
-  }
-
-  BounceAlongPathWithThreshold::~BounceAlongPathWithThreshold()
-  {
-  }
-
-
-  // This sets thermalSurvivalProbability by numerically integrating up to the
-  // critical temperature for tunneling to be possible from T = 0 unless the
-  // integral already passes a threshold, and sets
-  // dominantTemperatureInGigaElectronVolts to be the temperature with the
-  // lowest survival probability.
-  void BounceAlongPathWithThreshold::ContinueThermalTunneling(
-                                    PotentialFunction const& potentialFunction,
-                                           PotentialMinimum const& falseVacuum,
-                                            PotentialMinimum const& trueVacuum,
-                              double const potentialAtOriginAtZeroTemperature )
-  {
-    // First we set up the (square of the) threshold distance that we demand
-    // between the vacua at every temperature to trust the tunneling
-    // calculation.
-    double const thresholdSeparationSquared( vacuumSeparationFractionSquared
-                                * falseVacuum.SquareDistanceTo( trueVacuum ));
-
-    // We sum up decay widths over increasing temperatures.
-    double partialDecayWidth( 0.0 );
-    // The partial decay width scaled by the volume of the observable Universe
-    // is recorded in partialDecayWidth so that the bounce action threshold for
-    // each temperature can be calculated taking into account the contributions
-    // from higher temperatures.
-    double const temperatureStep( rangeOfMaxTemperatureForOriginToTrue.first
-                 / static_cast< double >( thermalIntegrationResolution + 1 ) );
-    double currentTemperature( 0.0 );
-    MinuitPotentialMinimizer thermalPotentialMinimizer( potentialFunction );
-    thermalPotentialMinimizer.SetTemperature( currentTemperature );
-    PotentialMinimum thermalFalseVacuum( falseVacuum );
-    PotentialMinimum thermalTrueVacuum( trueVacuum );
-    double const thresholdDecayWidth( -log( survivalProbabilityThreshold )
-                 / ( temperatureStep * exp( lnOfThermalIntegrationFactor ) ) );
-
-    double smallestExponent( maximumPowerOfNaturalExponent );
-    dominantTemperatureInGigaElectronVolts = 0.0;
-
-    for( unsigned int whichStep( 0 );
-         whichStep < thermalIntegrationResolution;
-         ++whichStep )
+    BounceAlongPathWithThreshold::BounceAlongPathWithThreshold(
+            std::vector< std::unique_ptr<BouncePathFinder> > pathFinders,
+            std::unique_ptr<BounceActionCalculator> actionCalculator,
+            TunnelingCalculator::TunnelingStrategy const tunnelingStrategy,
+            bool const pathDeformation,
+            double const survivalProbabilityThreshold,
+            unsigned int const thermalIntegrationResolution,
+            unsigned int const temperatureAccuracy,
+            unsigned int const pathPotentialResolution,
+            unsigned int const pathFindingTimeout,
+            double const vacuumSeparationFraction ) :
+            BounceActionTunneler( tunnelingStrategy,
+                                  survivalProbabilityThreshold,
+                                  temperatureAccuracy,
+                                  vacuumSeparationFraction ),
+            pathFinders( std::move(pathFinders) ),
+            actionCalculator( std::move(actionCalculator) ),
+            pathDeformation( pathDeformation ),
+            thermalIntegrationResolution( thermalIntegrationResolution ),
+            pathPotentialResolution( pathPotentialResolution ),
+            pathFindingTimeout( pathFindingTimeout )
     {
-      currentTemperature += temperatureStep;
+      // This constructor is just an initialization list.
+    }
+
+    BounceAlongPathWithThreshold::~BounceAlongPathWithThreshold()
+    {
+    }
+
+
+    // This sets thermalSurvivalProbability by numerically integrating up to the
+    // critical temperature for tunneling to be possible from T = 0 unless the
+    // integral already passes a threshold, and sets
+    // dominantTemperatureInGigaElectronVolts to be the temperature with the
+    // lowest survival probability.
+    void BounceAlongPathWithThreshold::ContinueThermalTunneling(
+            PotentialFunction const& potentialFunction,
+            PotentialMinimum const& falseVacuum,
+            PotentialMinimum const& trueVacuum,
+            double const potentialAtOriginAtZeroTemperature )
+    {
+      // First we set up the (square of the) threshold distance that we demand
+      // between the vacua at every temperature to trust the tunneling
+      // calculation.
+      double const thresholdSeparationSquared( vacuumSeparationFractionSquared
+      * falseVacuum.SquareDistanceTo( trueVacuum ));
+
+      // We sum up decay widths over increasing temperatures.
+      double partialDecayWidth( 0.0 );
+      // The partial decay width scaled by the volume of the observable Universe
+      // is recorded in partialDecayWidth so that the bounce action threshold for
+      // each temperature can be calculated taking into account the contributions
+      // from higher temperatures.
+      double const temperatureStep( rangeOfMaxTemperatureForOriginToTrue.first
+                                    / static_cast< double >( thermalIntegrationResolution + 1 ) );
+      double currentTemperature( 0.0 );
+      MinuitPotentialMinimizer thermalPotentialMinimizer( potentialFunction );
       thermalPotentialMinimizer.SetTemperature( currentTemperature );
-      // We update the positions of the thermal vacua based on their positions
-      // at the last temperature step.
-      thermalFalseVacuum
-      = thermalPotentialMinimizer( thermalFalseVacuum.FieldConfiguration() );
-      // We have to keep checking to see if the field origin should be the
-      // thermal false vacuum. The result of thermalPotentialMinimizer already
-      // has the value of the potential at the field origin subtracted, so we
-      // just compare with zero.
-      if( thermalFalseVacuum.PotentialValue() > 0.0 )
+      PotentialMinimum thermalFalseVacuum( falseVacuum );
+      PotentialMinimum thermalTrueVacuum( trueVacuum );
+      double const thresholdDecayWidth( -log( survivalProbabilityThreshold )
+                                        / ( temperatureStep * exp( lnOfThermalIntegrationFactor ) ) );
+
+      double smallestExponent( maximumPowerOfNaturalExponent );
+      dominantTemperatureInGigaElectronVolts = 0.0;
+
+      for( unsigned int whichStep( 0 );
+           whichStep < thermalIntegrationResolution;
+           ++whichStep )
       {
+        currentTemperature += temperatureStep;
+        thermalPotentialMinimizer.SetTemperature( currentTemperature );
+        // We update the positions of the thermal vacua based on their positions
+        // at the last temperature step.
         thermalFalseVacuum
-        = PotentialMinimum( potentialFunction.FieldValuesOrigin(),
-                            0.0 );
-      }
-      thermalTrueVacuum
-      = thermalPotentialMinimizer( thermalTrueVacuum.FieldConfiguration() );
+                = thermalPotentialMinimizer( thermalFalseVacuum.FieldConfiguration() );
+        // We have to keep checking to see if the field origin should be the
+        // thermal false vacuum. The result of thermalPotentialMinimizer already
+        // has the value of the potential at the field origin subtracted, so we
+        // just compare with zero.
+        if( thermalFalseVacuum.PotentialValue() > 0.0 )
+        {
+          thermalFalseVacuum
+                  = PotentialMinimum( potentialFunction.FieldValuesOrigin(),
+                                      0.0 );
+        }
+        thermalTrueVacuum
+                = thermalPotentialMinimizer( thermalTrueVacuum.FieldConfiguration() );
 
-      if( !( thermalTrueVacuum.FunctionValue()
-             < thermalFalseVacuum.FunctionValue() ) )
+        if( !( thermalTrueVacuum.FunctionValue()
+               < thermalFalseVacuum.FunctionValue() ) )
+        {
+          // If the thermal vacua are the wrong way around in depth order
+          // (possibly due to the thermal minimizer failing to converge properly)
+          // then we break without adding in any decay width for this
+          // temperature.
+          std::stringstream warningBuilder;
+          warningBuilder << "At temperature " << currentTemperature
+                         << " GeV, minimizer rolled from panic vacuum from a lower temperature"
+                         << " to configuration which is not deeper than the configuration to"
+                         << " which it rolled from the DSB vacuum from that lower temperature."
+                         << " Skipping the contribution of this temperature.";
+          WarningLogger::LogWarning( warningBuilder.str() );
+          continue;
+        }
+        else if( thermalTrueVacuum.SquareDistanceTo( thermalFalseVacuum )
+                 < thresholdSeparationSquared )
+        {
+          // If the thermal vacua have gotten so close that a tunneling
+          // calculation is suspect, we break without adding in any decay width
+          // for this temperature.
+          std::stringstream warningBuilder;
+          warningBuilder << "At temperature " << currentTemperature
+                         << " GeV, minimizer found DSB vacuum and panic vacuum to be so close"
+                         << " that a tunneling calculation is not trustworthy. Skipping the"
+                         << " contribution of this temperature and higher temperatures.";
+          WarningLogger::LogWarning( warningBuilder.str() );
+          break;
+        }
+
+        double const actionThreshold( -currentTemperature
+                                      * log( currentTemperature
+                                             * currentTemperature
+                                             * ( thresholdDecayWidth
+                                                 - partialDecayWidth ) ) );
+        double const
+                bounceOverTemperature( BoundedBounceAction( potentialFunction,
+                                                            thermalFalseVacuum,
+                                                            thermalTrueVacuum,
+                                                            currentTemperature,
+                                                            actionThreshold,
+                                                            thresholdSeparationSquared )
+                                       / currentTemperature );
+
+        if( bounceOverTemperature < maximumPowerOfNaturalExponent )
+        {
+          partialDecayWidth += ( exp( -bounceOverTemperature )
+                                 / ( currentTemperature * currentTemperature ) );
+        }
+        if( bounceOverTemperature < smallestExponent )
+        {
+          smallestExponent = bounceOverTemperature;
+          dominantTemperatureInGigaElectronVolts = currentTemperature;
+        }
+
+        if( partialDecayWidth > thresholdDecayWidth )
+        {
+          // We don't bother calculating the rest of the contributions to the
+          // integral of the decay width if it is already large enough that the
+          // survival probability is below the threshold.
+          break;
+        }
+
+      }
+      if( partialDecayWidth > 0.0 )
       {
-        // If the thermal vacua are the wrong way around in depth order
-        // (possibly due to the thermal minimizer failing to converge properly)
-        // then we break without adding in any decay width for this
-        // temperature.
+        logOfMinusLogOfThermalProbability = ( lnOfThermalIntegrationFactor
+                                              + log( partialDecayWidth * temperatureStep ) );
+      }
+      else
+      {
+        logOfMinusLogOfThermalProbability
+                = -exp( maximumPowerOfNaturalExponent );
         std::stringstream warningBuilder;
-        warningBuilder << "At temperature " << currentTemperature
-        << " GeV, minimizer rolled from panic vacuum from a lower temperature"
-        << " to configuration which is not deeper than the configuration to"
-        << " which it rolled from the DSB vacuum from that lower temperature."
-        << " Skipping the contribution of this temperature.";
+        warningBuilder
+                << "The calculated integrated thermal decay width was so close to zero"
+                << " that taking its logarithm would be problematic, so setting the"
+                << " logarithm of the negative of the logarithm of the thermal survival"
+                << " probability to " << logOfMinusLogOfThermalProbability << ".";
         WarningLogger::LogWarning( warningBuilder.str() );
-        continue;
       }
-      else if( thermalTrueVacuum.SquareDistanceTo( thermalFalseVacuum )
-          < thresholdSeparationSquared )
-      {
-        // If the thermal vacua have gotten so close that a tunneling
-        // calculation is suspect, we break without adding in any decay width
-        // for this temperature.
-        std::stringstream warningBuilder;
-        warningBuilder << "At temperature " << currentTemperature
-        << " GeV, minimizer found DSB vacuum and panic vacuum to be so close"
-        << " that a tunneling calculation is not trustworthy. Skipping the"
-        << " contribution of this temperature and higher temperatures.";
-        WarningLogger::LogWarning( warningBuilder.str() );
-        break;
-      }
-
-      double const actionThreshold( -currentTemperature
-                                    * log( currentTemperature
-                                           * currentTemperature
-                                           * ( thresholdDecayWidth
-                                               - partialDecayWidth ) ) );
-      double const
-      bounceOverTemperature( BoundedBounceAction( potentialFunction,
-                                                  thermalFalseVacuum,
-                                                  thermalTrueVacuum,
-                                                  currentTemperature,
-                                                  actionThreshold,
-                                                  thresholdSeparationSquared )
-                             / currentTemperature );
-
-      if( bounceOverTemperature < maximumPowerOfNaturalExponent )
-      {
-        partialDecayWidth += ( exp( -bounceOverTemperature )
-                               / ( currentTemperature * currentTemperature ) );
-      }
-      if( bounceOverTemperature < smallestExponent )
-      {
-        smallestExponent = bounceOverTemperature;
-        dominantTemperatureInGigaElectronVolts = currentTemperature;
-      }
-
-      if( partialDecayWidth > thresholdDecayWidth )
-      {
-        // We don't bother calculating the rest of the contributions to the
-        // integral of the decay width if it is already large enough that the
-        // survival probability is below the threshold.
-        break;
-      }
-
+      SetThermalSurvivalProbability();
     }
-    if( partialDecayWidth > 0.0 )
+
+    // This returns either the dimensionless bounce action integrated over four
+    // dimensions (for zero temperature) or the dimensionful bounce action
+    // integrated over three dimensions (for non-zero temperature) for tunneling
+    // from falseVacuum to trueVacuum at temperature tunnelingTemperature, or an
+    // upper bound if the upper bound drops below actionThreshold during the
+    // course of the calculation. The vacua are assumed to already be the minima
+    // at tunnelingTemperature.
+    double BounceAlongPathWithThreshold::BoundedBounceAction(
+            PotentialFunction const& potentialFunction,
+            PotentialMinimum const& falseVacuum,
+            PotentialMinimum const& trueVacuum,
+            double const tunnelingTemperature,
+            double const actionThreshold,
+            double const requiredVacuumSeparationSquared )
     {
-      logOfMinusLogOfThermalProbability = ( lnOfThermalIntegrationFactor
-                                + log( partialDecayWidth * temperatureStep ) );
-    }
-    else
-    {
-      logOfMinusLogOfThermalProbability
-      = -exp( maximumPowerOfNaturalExponent );
-      std::stringstream warningBuilder;
-      warningBuilder
-      << "The calculated integrated thermal decay width was so close to zero"
-      << " that taking its logarithm would be problematic, so setting the"
-      << " logarithm of the negative of the logarithm of the thermal survival"
-      << " probability to " << logOfMinusLogOfThermalProbability << ".";
-      WarningLogger::LogWarning( warningBuilder.str() );
-    }
-    SetThermalSurvivalProbability();
-  }
+      std::vector< std::vector< double > > straightPath( 2,
+                                                         falseVacuum.FieldConfiguration() );
+      straightPath.back() = trueVacuum.FieldConfiguration();
 
-  // This returns either the dimensionless bounce action integrated over four
-  // dimensions (for zero temperature) or the dimensionful bounce action
-  // integrated over three dimensions (for non-zero temperature) for tunneling
-  // from falseVacuum to trueVacuum at temperature tunnelingTemperature, or an
-  // upper bound if the upper bound drops below actionThreshold during the
-  // course of the calculation. The vacua are assumed to already be the minima
-  // at tunnelingTemperature.
-  double BounceAlongPathWithThreshold::BoundedBounceAction(
-                                    PotentialFunction const& potentialFunction,
-                                           PotentialMinimum const& falseVacuum,
-                                            PotentialMinimum const& trueVacuum,
-                                             double const tunnelingTemperature,
-                                                  double const actionThreshold,
-                                 double const requiredVacuumSeparationSquared )
-  {
-    std::vector< std::vector< double > > straightPath( 2,
-                                            falseVacuum.FieldConfiguration() );
-    straightPath.back() = trueVacuum.FieldConfiguration();
-    TunnelPath const* bestPath( new LinearSplineThroughNodes( straightPath,
-                                                    std::vector< double >( 0 ),
-                                                      tunnelingTemperature ) );
-    std::cout<<"(JR) Created bestPath at "<< bestPath << std::endl;
-    actionCalculator->ResetVacua( potentialFunction,
-                                  falseVacuum,
-                                  trueVacuum,
-                                  tunnelingTemperature );
-    std::cout<<"(JR) after ResetVacua " << std::endl;
+
+      std::shared_ptr< const TunnelPath>  bestPath( new LinearSplineThroughNodes( straightPath,
+                                                                                  std::vector< double >( 0 ),
+                                                                                  tunnelingTemperature ) );
+
+
+      actionCalculator->ResetVacua( potentialFunction,
+                                    falseVacuum,
+                                    trueVacuum,
+                                    tunnelingTemperature );
+      std::cout<<"(JR) after ResetVacua " << std::endl;
 //    std::cout<<"(JR) pathPotentialResolution "<< pathPotentialResolution << std::endl;
 
-    SplinePotential pathPotential( potentialFunction,
-                                   *bestPath,
-                                   pathPotentialResolution,
-                                   requiredVacuumSeparationSquared );
-    std::cout<<"(JR) after SplinePotential " << std::endl;
+      SplinePotential pathPotential( potentialFunction,
+                                     *bestPath,
+                                     pathPotentialResolution,
+                                     requiredVacuumSeparationSquared );
+      std::cout<<"(JR) after SplinePotential " << std::endl;
 
-    if( !(pathPotential.EnergyBarrierWasResolved()) )
-    {
-//      std::cout<<"(JR) in if  " << std::endl;
-      std::stringstream warningBuilder;
-      warningBuilder << "Unable to resolve an energy barrier between false"
-      << " vacuum and true vacuum: returning bounce action of zero (which"
-      << " should be sufficient to exclude the parameter point).";
-      WarningLogger::LogWarning( warningBuilder.str() );
-      std::cout<< "(JR) In Mem leak (?) if loop BounceAlongPathWithThreshold "<< std::endl;
-      std::cout<<"(JR) will delete bestPath at "<< bestPath << std::endl;
-      delete bestPath;
-      return 0.0;
-    }
-
-    std::cout<<"(JR) before create bestBubble with pineapple " << std::endl;
-    BubbleProfile const* bestBubble( (*actionCalculator)( *bestPath,
-                                                          pathPotential ) ); //
-
-    std::cout<<"(JR) Created bestBubble at "<< bestBubble << std::endl;
-
-    std::cout << std::endl
-    << "Initial path bounce action = " << bestBubble->BounceAction();
-    if( bestPath->NonZeroTemperature() )
-    {
-      std::cout << " GeV";
-
-      thermalThresholdAndActions.push_back(actionThreshold);
-      thermalThresholdAndActions.push_back(bestBubble->BounceAction());
-    }
-    else
-    {
-      thresholdAndActions.push_back(actionThreshold);
-      thresholdAndActions.push_back(bestBubble->BounceAction());
-    }
-    std::cout << ", threshold is " << actionThreshold;
-    if( bestPath->NonZeroTemperature() )
-    {
-      std::cout << " GeV";
-    }
-    std::cout << ".";
-    std::cout << std::endl;
-
-    // Checking if initial path already has a very low action
-
-    if( bestBubble->BounceAction() < actionThreshold )
-    {
-      std::cout
-              << std::endl
-              << "Bounce action dropped below threshold, breaking off from looking"
-              << " for further path improvements.";
-      std::cout << std::endl;
-      double const bounceAction( bestBubble->BounceAction() );
-      std::cout<<"(JR) will delete bestBubble (1) at "<< bestBubble << std::endl;
-      delete bestBubble;
-      bestBubble=NULL;
-      std::cout<<"(JR) will delete bestPath (1) at "<< bestPath << std::endl;
-      delete bestPath;
-      bestPath=NULL;
-      return bounceAction;
-    }
-
-    if( !pathDeformation )
-    {
-      std::cout
-              << std::endl
-              << "No path deformation. Taking straight path action.";
-      std::cout << std::endl;
-      std::cout
-              << std::endl
-              << pathDeformation ;
-      std::cout << std::endl;
-      double const bounceAction( bestBubble->BounceAction() );
-      std::cout<<"(JR) will delete bestBubble (2) at "<< bestBubble << std::endl;
-      delete bestBubble;
-      bestBubble=NULL;
-      std::cout<<"(JR) will delete bestPath (2) at "<< bestPath << std::endl;
-      delete bestPath;
-      bestPath=NULL;
-      return bounceAction;
-    }
-
-    // Declaring variables for timing
-    time_t pathFindingStartTime;
-    time_t currentTime;
-    // Setting the starting time of the path finding
-    time( &pathFindingStartTime );
-
-
-
-
-
-
-    for( auto pathFinder( pathFinders.begin() );
-         pathFinder < pathFinders.end();
-         ++pathFinder )
-    {
-      time(&currentTime);
-
-      if (difftime( currentTime, pathFindingStartTime ) > pathFindingTimeout )
+      if( !(pathPotential.EnergyBarrierWasResolved()) )
       {
-          std::stringstream errorBuilder;
-          errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << " seconds.";
-          throw std::runtime_error( errorBuilder.str() );
-          break;
-      };
+//      std::cout<<"(JR) in if  " << std::endl;
+        std::stringstream warningBuilder;
+        warningBuilder << "Unable to resolve an energy barrier between false"
+                       << " vacuum and true vacuum: returning bounce action of zero (which"
+                       << " should be sufficient to exclude the parameter point).";
+        WarningLogger::LogWarning( warningBuilder.str() );
+        return 0.0;
+      }
+
+
+      std::shared_ptr< const BubbleProfile> bestBubble( (*actionCalculator)( *bestPath,
+                                                            pathPotential ) ); //
 
       std::cout << std::endl
-      << "Passing best path so far to next path finder.";
-      std::cout << std::endl;
-
-      (*pathFinder)->SetPotentialAndVacuaAndTemperature( potentialFunction,
-                                                         falseVacuum,
-                                                         trueVacuum,
-                                                        tunnelingTemperature );
-      TunnelPath const* currentPath( bestPath );
-      BubbleProfile const* currentBubble( bestBubble );
-
-      // The paths produced in sequence by pathFinder are kept separate from
-      // bestPath to give more freedom to pathFinder internally (though I
-      // cannot right now think of any way in which it would actually be
-      // useful, apart from maybe some crazy MCMC which might try to get out of
-      // a local minimum, which wouldn't work if it was sent back to the local
-      // minimum at each step).
-
-      // Keeping track of a best path and bubble separately from the last-used
-      // path and bubble without copying any instances requires a bit of
-      // book-keeping. Each iteration of the loop below will produce new
-      // instances of a path and a bubble, and either the new path and bubble
-      // need to be deleted or the previous best need to be deleted. These two
-      // pointers keep track of which is to be deleted. They start as NULL,
-      // allowing the first iteration to delete them before any path has been
-      // marked for deletion.
-      TunnelPath const* pathDeleter( NULL );
-      BubbleProfile const* bubbleDeleter( NULL );
-
-      // This loop will get a path from pathFinder and then repeat if
-      // pathFinder decides that the path can be improved once the bubble
-      // profile is obtained, as long as the bounce action has not dropped
-      // below the threshold.
-
-      do
-      {
-        // The nextPath and nextBubble pointers are not strictly necessary,
-        // but they make the logic of the code clearer and will probably be
-        // optimized away by the compiler anyway.
-        time(&currentTime);
-
-        if (difftime( currentTime, pathFindingStartTime ) > pathFindingTimeout ) // HERE THE CUTOFF IS SET, MAKE A VARIABLE IN INPUT
-        {
-          std::stringstream errorBuilder;
-          errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << "seconds.";
-          throw std::runtime_error( errorBuilder.str() );
-          break;
-        };
-
-        TunnelPath const* nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
-                                                   *currentBubble ) );
-
-//        std::cout<<"(JR) Created nextPath at "<< nextPath << std::endl;
-        SplinePotential potentialApproximation( potentialFunction,
-                                                *nextPath,
-                                                pathPotentialResolution,
-                                             requiredVacuumSeparationSquared );
-
-        BubbleProfile const* nextBubble( (*actionCalculator)( *nextPath,
-                                                    potentialApproximation ) );
-
-        std::cout<<"(JR) Created nextBubble at "<< nextBubble << std::endl;
-
-        // On the first iteration of the loop, these pointers are NULL, so
-        // it's no problem to delete them. On subsequent iterations, they point
-        // at the higher-action path and bubble from the last iterations
-        // comparison between its nextPath and bestPath.
-        std::cout<<"(JR) will delete bubbleDeleter at "<< bubbleDeleter << std::endl;
-        delete bubbleDeleter;
-        bubbleDeleter = NULL;
-        std::cout<<"(JR) will delete pathDeleter at "<< pathDeleter << std::endl;
-        delete pathDeleter;
-        pathDeleter=NULL;
-
-        if( nextBubble->BounceAction() < bestBubble->BounceAction() )
-        {
-          // If nextBubble was an improvement on bestBubble, what bestPath
-          // currently points at gets marked for deletion either on the next
-          // iteration of this loop or just after the loop, and then bestPath
-          // is set to point at nextPath, with the corresponding operations for
-          // the bubble pointers.
-          bubbleDeleter = bestBubble;
-          bestBubble = nextBubble;
-          pathDeleter = bestPath;
-          bestPath = nextPath;
-        }
-        else
-        {
-          // If nextBubble wasn't an improvement on bestBubble, it and nextPath
-          // will be deleted after being used to generate the nextPath and
-          // nextBubble of the next iteration of the loop (or after the loop if
-          // this ends up being the last iteration) through these pointers.
-          bubbleDeleter = nextBubble;
-          pathDeleter = nextPath;
-        }
-        currentBubble = nextBubble;
-        currentPath = nextPath;
-
-        std::cout << std::endl
-        << "bounce action for new path = " << currentBubble->BounceAction();
-        if( currentPath->NonZeroTemperature() )
-        {
-          std::cout << " GeV";
-        }
-        std::cout << ", lowest bounce action so far = "
-        << bestBubble->BounceAction();
-        if( currentPath->NonZeroTemperature() )
-        {
-          std::cout << " GeV";
-        }
-        std::cout << ", threshold is " << actionThreshold;
-        if( currentPath->NonZeroTemperature() )
-        {
-          std::cout << " GeV";
-        }
-        std::cout << ".";
-        std::cout << std::endl;
-      } while( ( bestBubble->BounceAction() > actionThreshold )
-               &&
-               (*pathFinder)->PathCanBeImproved( *currentBubble ) );
-      // At the end of the loop, these point at the last tried path and bubble
-      // which did not end up as the best ones, so deleting them is no problem.
-      std::cout<<"(JR) will delete bubbleDeleter (2) at "<< bubbleDeleter << std::endl;
-      delete bubbleDeleter;
-      bubbleDeleter = NULL;
-      std::cout<<"(JR) will delete pointDeleter (2) at "<< pathDeleter << std::endl;
-      delete pathDeleter;
-      pathDeleter = NULL;
-
-      // Recodring the best action for each pathfinder
+                << "Initial path bounce action = " << bestBubble->BounceAction();
       if( bestPath->NonZeroTemperature() )
       {
+        std::cout << " GeV";
+
+        thermalThresholdAndActions.push_back(actionThreshold);
         thermalThresholdAndActions.push_back(bestBubble->BounceAction());
       }
       else
       {
+        thresholdAndActions.push_back(actionThreshold);
         thresholdAndActions.push_back(bestBubble->BounceAction());
       }
+      std::cout << ", threshold is " << actionThreshold;
+      if( bestPath->NonZeroTemperature() )
+      {
+        std::cout << " GeV";
+      }
+      std::cout << ".";
+      std::cout << std::endl;
 
-      // We don't bother with the rest of the path finders if the action has
-      // already dropped below the threshold.
+      // Checking if initial path already has a very low action
+
       if( bestBubble->BounceAction() < actionThreshold )
       {
         std::cout
-        << std::endl
-        << "Bounce action dropped below threshold, breaking off from looking"
-        << " for further path improvements.";
+                << std::endl
+                << "Bounce action dropped below threshold, breaking off from looking"
+                << " for further path improvements.";
+        std::cout << std::endl;
+        double const bounceAction( bestBubble->BounceAction() );
+        return bounceAction;
+      }
+
+      if( !pathDeformation )
+      {
+        std::cout
+                << std::endl
+                << "No path deformation. Taking straight path action.";
+        std::cout << std::endl;
+        std::cout
+                << std::endl
+                << pathDeformation ;
+        std::cout << std::endl;
+        double const bounceAction( bestBubble->BounceAction() );
+        return bounceAction;
+      }
+
+      // Declaring variables for timing
+      time_t pathFindingStartTime;
+      time_t currentTime;
+      // Setting the starting time of the path finding
+      time( &pathFindingStartTime );
+
+
+
+
+
+
+      for( auto pathFinder( pathFinders.begin() );
+           pathFinder < pathFinders.end();
+           ++pathFinder )
+      {
+        time(&currentTime);
+
+        if (difftime( currentTime, pathFindingStartTime ) > pathFindingTimeout )
+        {
+          std::stringstream errorBuilder;
+          errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << " seconds.";
+          throw std::runtime_error( errorBuilder.str() );
+          break;
+        };
+
+        std::cout << std::endl
+                  << "Passing best path so far to next path finder.";
         std::cout << std::endl;
 
-        break;
+        (*pathFinder)->SetPotentialAndVacuaAndTemperature( potentialFunction,
+                                                           falseVacuum,
+                                                           trueVacuum,
+                                                           tunnelingTemperature );
+        std::shared_ptr< const TunnelPath> currentPath = bestPath;
+        std::shared_ptr< const BubbleProfile> currentBubble = bestBubble;
+
+        // The paths produced in sequence by pathFinder are kept separate from
+        // bestPath to give more freedom to pathFinder internally (though I
+        // cannot right now think of any way in which it would actually be
+        // useful, apart from maybe some crazy MCMC which might try to get out of
+        // a local minimum, which wouldn't work if it was sent back to the local
+        // minimum at each step).
+
+
+        // This loop will get a path from pathFinder and then repeat if
+        // pathFinder decides that the path can be improved once the bubble
+        // profile is obtained, as long as the bounce action has not dropped
+        // below the threshold.
+
+        do
+        {
+          // The nextPath and nextBubble pointers are not strictly necessary,
+          // but they make the logic of the code clearer and will probably be
+          // optimized away by the compiler anyway.
+          time(&currentTime);
+
+          if (difftime( currentTime, pathFindingStartTime ) > pathFindingTimeout ) // HERE THE CUTOFF IS SET, MAKE A VARIABLE IN INPUT
+          {
+            std::stringstream errorBuilder;
+            errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << "seconds.";
+            throw std::runtime_error( errorBuilder.str() );
+            break;
+          };
+
+          std::shared_ptr<const TunnelPath> nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
+                                                                                       *currentBubble ) );
+
+          SplinePotential potentialApproximation( potentialFunction,
+                                                  *nextPath,
+                                                  pathPotentialResolution,
+                                                  requiredVacuumSeparationSquared );
+
+          std::shared_ptr<const BubbleProfile> nextBubble( (*actionCalculator)( *nextPath,
+                                                                potentialApproximation ) );
+
+
+          if( nextBubble->BounceAction() < bestBubble->BounceAction() )
+          {
+            // If nextBubble was an improvement on bestBubble, then bestPath
+            // is set to point at nextPath, with the corresponding operations for
+            // the bubble pointers.
+
+            bestPath = nextPath;
+            bestBubble = nextBubble;
+
+          }
+
+
+          currentBubble = nextBubble;
+          currentPath = nextPath;
+
+
+          std::cout << std::endl
+                    << "bounce action for new path = " << currentBubble->BounceAction();
+          if( currentPath->NonZeroTemperature() )
+          {
+            std::cout << " GeV";
+          }
+          std::cout << ", lowest bounce action so far = "
+                    << bestBubble->BounceAction();
+          if( currentPath->NonZeroTemperature() )
+          {
+            std::cout << " GeV";
+          }
+          std::cout << ", threshold is " << actionThreshold;
+          if( currentPath->NonZeroTemperature() )
+          {
+            std::cout << " GeV";
+          }
+          std::cout << ".";
+          std::cout << std::endl;
+        } while( ( bestBubble->BounceAction() > actionThreshold )
+                 &&
+                 (*pathFinder)->PathCanBeImproved( *currentBubble ) );
+
+        // Recodring the best action for each pathfinder
+        if( bestPath->NonZeroTemperature() )
+        {
+          thermalThresholdAndActions.push_back(bestBubble->BounceAction());
+        }
+        else
+        {
+          thresholdAndActions.push_back(bestBubble->BounceAction());
+        }
+
+        // We don't bother with the rest of the path finders if the action has
+        // already dropped below the threshold.
+        if( bestBubble->BounceAction() < actionThreshold )
+        {
+          std::cout
+                  << std::endl
+                  << "Bounce action dropped below threshold, breaking off from looking"
+                  << " for further path improvements.";
+          std::cout << std::endl;
+
+          break;
+        }
       }
-    }
 
-    std::cout << std::endl
-    << "Lowest path bounce action at " << tunnelingTemperature << " GeV was "
-    << bestBubble->BounceAction();
-    if( bestPath->NonZeroTemperature() )
-    {
-      std::cout << " GeV";
-    }
-    std::cout << ", threshold is " << actionThreshold;
-    if( bestPath->NonZeroTemperature() )
-    {
-      std::cout << " GeV";
-    }
-    std::cout << ".";
-    std::cout << std::endl;
+      std::cout << std::endl
+                << "Lowest path bounce action at " << tunnelingTemperature << " GeV was "
+                << bestBubble->BounceAction();
+      if( bestPath->NonZeroTemperature() )
+      {
+        std::cout << " GeV";
+      }
+      std::cout << ", threshold is " << actionThreshold;
+      if( bestPath->NonZeroTemperature() )
+      {
+        std::cout << " GeV";
+      }
+      std::cout << ".";
+      std::cout << std::endl;
 
-    double const bounceAction( bestBubble->BounceAction() );
-    std::cout<<"(JR) will delete bestBubble (3) at "<< bestBubble << std::endl;
-    delete bestBubble;
-    bestBubble = NULL;
-    std::cout<<"(JR) will delete bestPath (3) at "<< bestPath << std::endl;
-    delete bestPath;
-    bestPath = NULL;
-    return bounceAction;
-  }
+      double const bounceAction( bestBubble->BounceAction() );
+      return bounceAction;
+    }
 
 } /* namespace VevaciousPlusPlus */
