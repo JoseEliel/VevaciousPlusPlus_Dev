@@ -47,7 +47,19 @@ namespace VevaciousPlusPlus
     std::string potentialMinimizerInitializationFilename( "error" );
     std::string tunnelingCalculatorInitializationFilename( "error" );
     LHPC::RestrictedXmlParser xmlParser;
-    xmlParser.OpenRootElementOfFile( initializationFileName );
+    try{
+      xmlParser.OpenRootElementOfFile( initializationFileName );
+    }
+    catch(const std::exception& E)
+    {
+      std::stringstream errorBuilder;
+      errorBuilder
+              << std::endl
+              << " Problems accessing initialization file of Vevacious. "<<std::endl;
+
+      throw std::runtime_error( errorBuilder.str() );
+    }
+
     while( xmlParser.ReadNextElement() )
     {
       if( xmlParser.CurrentName() == "PotentialFunctionInitializationFile" )
