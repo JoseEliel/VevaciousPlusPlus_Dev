@@ -320,9 +320,16 @@ namespace VevaciousPlusPlus
                                                            falseVacuum,
                                                            trueVacuum,
                                                            tunnelingTemperature );
-        std::shared_ptr< const TunnelPath> currentPath = bestPath;
-        std::shared_ptr< const BubbleProfile> currentBubble = bestBubble;
+        std::cout << std::endl
+                  << "Before assignment of currentPath and currentBubble.";
+        std::cout << std::endl;
 
+        std::shared_ptr< const TunnelPath> currentPath(bestPath);
+        std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
+
+        std::cout << std::endl
+                  << "After assignment of bestPath and bestBubble.";
+        std::cout << std::endl;
         // The paths produced in sequence by pathFinder are kept separate from
         // bestPath to give more freedom to pathFinder internally (though I
         // cannot right now think of any way in which it would actually be
@@ -351,6 +358,10 @@ namespace VevaciousPlusPlus
             break;
           };
 
+          std::cout << std::endl
+                    << "Before creating of nextPath and nextBubble.";
+          std::cout << std::endl;
+
           std::shared_ptr<const TunnelPath> nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
                                                                                        *currentBubble ) );
 
@@ -362,6 +373,9 @@ namespace VevaciousPlusPlus
           std::shared_ptr<const BubbleProfile> nextBubble( (*actionCalculator)( *nextPath,
                                                                 potentialApproximation ) );
 
+          std::cout << std::endl
+                    << "After creating of nextPath and nextBubble.";
+          std::cout << std::endl;
 
           if( nextBubble->BounceAction() < bestBubble->BounceAction() )
           {
