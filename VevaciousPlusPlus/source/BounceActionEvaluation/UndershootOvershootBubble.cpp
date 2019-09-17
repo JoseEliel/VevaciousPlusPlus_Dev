@@ -6,6 +6,7 @@
  */
 
 #include "BounceActionEvaluation/UndershootOvershootBubble.hpp"
+#include <iostream>
 
 namespace VevaciousPlusPlus
 {
@@ -42,7 +43,8 @@ namespace VevaciousPlusPlus
 
   UndershootOvershootBubble::~UndershootOvershootBubble()
   {
-    // This does nothing.
+    // Debug print
+    std::cout<< "(EC)              A undershootOvershootBubble: BubbleProfile has been destructed"<<" at "<<&(*this)<<std::endl;
   }
 
 

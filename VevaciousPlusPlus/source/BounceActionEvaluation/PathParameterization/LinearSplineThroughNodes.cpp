@@ -6,6 +6,7 @@
  */
 
 #include "BounceActionEvaluation/PathParameterization/LinearSplineThroughNodes.hpp"
+#include <iostream>
 
 namespace VevaciousPlusPlus
 {
@@ -60,7 +61,8 @@ namespace VevaciousPlusPlus
 
   LinearSplineThroughNodes::~LinearSplineThroughNodes()
   {
-    // This does nothing.
+    // Debug print
+    std::cout<< "(EC)              A LinearSplineThroughNodes: TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;
   }
 
 } /* namespace VevaciousPlusPlus */
