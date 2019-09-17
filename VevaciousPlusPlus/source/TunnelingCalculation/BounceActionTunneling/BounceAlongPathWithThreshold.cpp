@@ -209,6 +209,8 @@ namespace VevaciousPlusPlus
                                                                                   std::vector< double >( 0 ),
                                                                                   tunnelingTemperature ) );
 
+      std::cout << "(EC)              raw pointer of bestPath after creation is " << bestPath.get()
+                << std::endl;
 
       actionCalculator->ResetVacua( potentialFunction,
                                     falseVacuum,
@@ -237,6 +239,9 @@ namespace VevaciousPlusPlus
 
       std::shared_ptr< const BubbleProfile> bestBubble( (*actionCalculator)( *bestPath,
                                                             pathPotential ) ); //
+
+      std::cout << "(EC)              raw pointer of bestBubble after creation is " << bestBubble.get()
+                << std::endl;
 
       std::cout << std::endl
                 << "Initial path bounce action = " << bestBubble->BounceAction();
@@ -321,15 +326,22 @@ namespace VevaciousPlusPlus
                                                            trueVacuum,
                                                            tunnelingTemperature );
         std::cout << std::endl
-                  << "Before assignment of currentPath and currentBubble.";
+                  << "(EC)              Before assignment of currentPath and currentBubble.";
         std::cout << std::endl;
 
         std::shared_ptr< const TunnelPath> currentPath(bestPath);
         std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
         std::cout << std::endl
-                  << "After assignment of bestPath and bestBubble.";
+                  << "(EC)              After assignment of currentPath and currentBubble.";
         std::cout << std::endl;
+
+        std::cout << "(EC)              raw pointer of currentPath after assignment is " << currentPath.get()
+                  << std::endl;
+        std::cout << "(EC)              raw pointer of currentBubble after assignment is " << currentBubble.get()
+                  << std::endl;
+
+
         // The paths produced in sequence by pathFinder are kept separate from
         // bestPath to give more freedom to pathFinder internally (though I
         // cannot right now think of any way in which it would actually be
@@ -359,7 +371,7 @@ namespace VevaciousPlusPlus
           };
 
           std::cout << std::endl
-                    << "Before creating of nextPath and nextBubble.";
+                    << "(EC)              Before creating of nextPath and nextBubble.";
           std::cout << std::endl;
 
           std::shared_ptr<const TunnelPath> nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
@@ -374,8 +386,14 @@ namespace VevaciousPlusPlus
                                                                 potentialApproximation ) );
 
           std::cout << std::endl
-                    << "After creating of nextPath and nextBubble.";
+                    << "(EC)              After creating of nextPath and nextBubble.";
           std::cout << std::endl;
+
+          std::cout << "(EC)              raw pointer of nextPath is " << nextPath.get()
+                    << std::endl;
+          std::cout << "(EC)              raw pointer of nextBubble is " << nextBubble.get()
+                    << std::endl;
+
 
           if( nextBubble->BounceAction() < bestBubble->BounceAction() )
           {
@@ -386,6 +404,10 @@ namespace VevaciousPlusPlus
             bestPath = nextPath;
             bestBubble = nextBubble;
 
+            std::cout << "(EC)              bestPath now points to " << bestPath.get()
+                      << std::endl;
+            std::cout << "(EC)              bestBubble now points to " << bestBubble.get()
+                      << std::endl;
           }
 
 
