@@ -56,7 +56,7 @@ namespace VevaciousPlusPlus
     // rely on the radial dependence of the path auxiliary being approximated
     // reasonably by that of the previous path, similarly to the strategy used
     // by CosmoTransitions.
-    virtual TunnelPath const* TryToImprovePath( TunnelPath const& lastPath,
+    virtual std::shared_ptr<const TunnelPath>  TryToImprovePath( TunnelPath const& lastPath,
                                  BubbleProfile const& bubbleFromLastPath ) = 0;
 
 

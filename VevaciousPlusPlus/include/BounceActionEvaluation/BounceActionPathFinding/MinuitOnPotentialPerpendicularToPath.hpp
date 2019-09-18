@@ -50,7 +50,7 @@ namespace VevaciousPlusPlus
     // nodesConverged is set to true. (The bubble profile from the last path is
     // ignored, but there is an empty hook in the loop to allow derived classes
     // to use it.)
-    virtual TunnelPath const* TryToImprovePath( TunnelPath const& lastPath,
+    std::shared_ptr<const TunnelPath>  TryToImprovePath( TunnelPath const& lastPath,
                                      BubbleProfile const& bubbleFromLastPath );
 
 

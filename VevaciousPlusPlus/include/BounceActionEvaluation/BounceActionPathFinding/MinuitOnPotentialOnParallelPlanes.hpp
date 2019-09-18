@@ -39,7 +39,7 @@ namespace VevaciousPlusPlus
     // to be the previous node plus the vector difference of previous node from
     // the node before it, with a special case for the first varying node. It
     // ignores both arguments, and also sets notYetProvidedPath to false.
-    virtual TunnelPath const* TryToImprovePath( TunnelPath const& lastPath,
+    virtual std::shared_ptr<const TunnelPath>  TryToImprovePath( TunnelPath const& lastPath,
                                      BubbleProfile const& bubbleFromLastPath );
   };
 

@@ -54,7 +54,7 @@ namespace VevaciousPlusPlus
   // nodesConverged is set to true. (The bubble profile from the last path is
   // ignored, but there is an empty hook in the loop to allow derived classes
   // to use it.)
-  TunnelPath const* MinuitOnPotentialPerpendicularToPath::TryToImprovePath(
+  std::shared_ptr<const TunnelPath> MinuitOnPotentialPerpendicularToPath::TryToImprovePath(
                                                     TunnelPath const& lastPath,
                                       BubbleProfile const& bubbleFromLastPath )
   {
@@ -159,9 +159,12 @@ namespace VevaciousPlusPlus
     }
 
     // Finally we make a new path through returnPathNodes.
-    return new LinearSplineThroughNodes( returnPathNodes,
+
+    LinearSplineThroughNodes newPath(  returnPathNodes,
                                          nodeZeroParameterization,
                                          pathTemperature );
+
+    return std::make_shared<const LinearSplineThroughNodes>(newPath); 
   }
 
 } /* namespace VevaciousPlusPlus */

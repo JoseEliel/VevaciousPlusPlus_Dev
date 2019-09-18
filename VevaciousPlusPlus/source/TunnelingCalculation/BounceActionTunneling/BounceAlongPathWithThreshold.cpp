@@ -246,9 +246,9 @@ namespace VevaciousPlusPlus
         return 0.0;
       }
 
+      UndershootOvershootBubble* bestBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *bestPath, pathPotential ));
 
-      std::shared_ptr< const BubbleProfile> bestBubble( (*actionCalculator)( *bestPath,
-                                                            pathPotential ) ); //
+      std::shared_ptr< const BubbleProfile> bestBubble = std::make_shared<const UndershootOvershootBubble>(*bestBubbleInstance);
 
       std::cout << "(EC)              raw pointer of bestBubble after creation is " << bestBubble.get()
                 << std::endl;
@@ -384,16 +384,18 @@ namespace VevaciousPlusPlus
                     << "(EC)              Before creating of nextPath and nextBubble.";
           std::cout << std::endl;
 
-          std::shared_ptr<const TunnelPath> nextPath( (*pathFinder)->TryToImprovePath( *currentPath,
-                                                                                       *currentBubble ) );
+          std::shared_ptr<const TunnelPath> nextPath = (*pathFinder)->TryToImprovePath( *currentPath, *currentBubble ) ;
 
           SplinePotential potentialApproximation( potentialFunction,
                                                   *nextPath,
                                                   pathPotentialResolution,
                                                   requiredVacuumSeparationSquared );
 
-          std::shared_ptr<const BubbleProfile> nextBubble( (*actionCalculator)( *nextPath,
-                                                                potentialApproximation ) );
+
+          UndershootOvershootBubble* nextBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *nextPath, potentialApproximation ));
+
+          std::shared_ptr< const BubbleProfile> nextBubble = std::make_shared<const UndershootOvershootBubble>(*nextBubbleInstance);
+          
 
           std::cout << std::endl
                     << "(EC)              After creating of nextPath and nextBubble.";

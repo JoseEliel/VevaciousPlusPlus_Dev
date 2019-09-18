@@ -35,7 +35,7 @@ namespace VevaciousPlusPlus
   // to be the previous node plus the vector difference of previous node from
   // the node before it, with a special case for the first varying node. It
   // ignores both arguments, and also sets notYetProvidedPath to false.
-  TunnelPath const* MinuitOnPotentialOnParallelPlanes::TryToImprovePath(
+  std::shared_ptr<const TunnelPath>  MinuitOnPotentialOnParallelPlanes::TryToImprovePath(
                                                     TunnelPath const& lastPath,
                                       BubbleProfile const& bubbleFromLastPath )
   {
@@ -74,9 +74,12 @@ namespace VevaciousPlusPlus
       }
       RunMigradAndPutTransformedResultIn( returnPathNodes[ nodeIndex ] );
     }
-    return new LinearSplineThroughNodes( returnPathNodes,
+
+    LinearSplineThroughNodes newPath( returnPathNodes,
                                          nodeZeroParameterization,
-                                         pathTemperature );
+                                         pathTemperature  );
+
+    return std::make_shared<const LinearSplineThroughNodes>(newPath);
   }
 
 } /* namespace VevaciousPlusPlus */
