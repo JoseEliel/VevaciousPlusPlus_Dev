@@ -39,6 +39,9 @@ namespace VevaciousPlusPlus
     tunnelPath( NULL )
   {
     // This constructor is just an initialization list.
+    std::cout << std::endl
+              << "(EC)             CONSTRUCTOR SAYS: Just created a UndershootOvershootBubble"<<" at "<<&(*this)<<std::endl;
+    std::cout << std::endl;
   }
 
   UndershootOvershootBubble::~UndershootOvershootBubble()

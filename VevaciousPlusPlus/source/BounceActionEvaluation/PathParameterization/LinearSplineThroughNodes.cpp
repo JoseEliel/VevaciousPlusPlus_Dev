@@ -57,12 +57,15 @@ namespace VevaciousPlusPlus
                                  pathNodes[ segmentIndex + 1 ],
                      ( segmentLengths[ segmentIndex ] * inverseTotalLength ) );
     }
+    std::cout << std::endl
+              << "(EC)            CONSTRUCTOR SAYS: Just created a LinearSplineThroughNodes"<<" at "<<&(*this)<<std::endl;
+    std::cout << std::endl;
   }
 
   LinearSplineThroughNodes::~LinearSplineThroughNodes()
   {
     // Debug print
-    std::cout<< "(EC)              A LinearSplineThroughNodes: TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;
+    std::cout<< "(EC)               A LinearSplineThroughNodes: TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;
   }
 
 } /* namespace VevaciousPlusPlus */
