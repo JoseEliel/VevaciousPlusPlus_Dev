@@ -204,10 +204,20 @@ namespace VevaciousPlusPlus
                                                          falseVacuum.FieldConfiguration() );
       straightPath.back() = trueVacuum.FieldConfiguration();
 
+      LinearSplineThroughNodes bestPathInstance( straightPath,
+                                std::vector< double >( 0 ),
+                                tunnelingTemperature );
 
-      std::shared_ptr< const TunnelPath>  bestPath( new LinearSplineThroughNodes( straightPath,
-                                                                                  std::vector< double >( 0 ),
-                                                                                  tunnelingTemperature ) );
+      std::cout << "(EC)              pointer of bestPathInstance after creation is " << &bestPathInstance << std::endl;
+
+
+      std::shared_ptr< const TunnelPath> bestPath = std::make_shared< const LinearSplineThroughNodes>(bestPathInstance);
+
+
+
+      //std::shared_ptr< const TunnelPath>  bestPath( new LinearSplineThroughNodes( straightPath,
+      //                                                                            std::vector< double >( 0 ),
+      //                                                                            tunnelingTemperature ) );
 
       std::cout << "(EC)              raw pointer of bestPath after creation is " << bestPath.get()
                 << std::endl;
