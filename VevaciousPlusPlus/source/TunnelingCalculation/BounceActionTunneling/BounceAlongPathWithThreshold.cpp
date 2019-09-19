@@ -386,16 +386,30 @@ namespace VevaciousPlusPlus
 
           std::shared_ptr<const TunnelPath> nextPath = (*pathFinder)->TryToImprovePath( *currentPath, *currentBubble ) ;
 
+          std::cout << std::endl
+                    << "(EC)             Adress of nextPath after creation is "<< nextPath.get();
+          std::cout << std::endl;
+
+          std::cout << std::endl
+                    << "(EC)             Before creating Spline Potential.";
+          std::cout << std::endl;
+
           SplinePotential potentialApproximation( potentialFunction,
                                                   *nextPath,
                                                   pathPotentialResolution,
                                                   requiredVacuumSeparationSquared );
-
+          std::cout << std::endl
+                    << "(EC)             After creating Spline Potential.";
+          std::cout << std::endl;
 
           UndershootOvershootBubble* nextBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *nextPath, potentialApproximation ));
+          std::cout << std::endl
+                    << "(EC)             bextBubbleInstance is created";
+          std::cout << std::endl;
+          std::cout << std::endl << "(EC)             address after creation is " << nextBubbleInstance <<std::endl;
 
           std::shared_ptr< const BubbleProfile> nextBubble = std::make_shared<const UndershootOvershootBubble>(*nextBubbleInstance);
-          
+
 
           std::cout << std::endl
                     << "(EC)              After creating of nextPath and nextBubble.";
