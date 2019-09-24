@@ -35,7 +35,7 @@ namespace VevaciousPlusPlus
   {
   public:
     PHCRunner( std::string const& pathToPHC,
-                   double const resolutionSize, unsigned const int taskcount );
+                   double const resolutionSize, unsigned const int taskcount, const int randomseed_in = -1 );
     virtual ~PHCRunner();
 
 
@@ -52,6 +52,7 @@ namespace VevaciousPlusPlus
     std::string const pathToPHC;
     double const resolutionSize;
 	unsigned const int taskcount;
+	const int randomseed;
 
     // This sets up the variable names in variableNames and nameToIndexMap,
     // then writes systemToSolve using these names in the correct form for

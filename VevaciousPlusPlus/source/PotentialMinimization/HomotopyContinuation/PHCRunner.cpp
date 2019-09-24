@@ -16,10 +16,11 @@ namespace VevaciousPlusPlus
   std::string const PHCRunner::fieldNamePrefix( "fv" );
 
   PHCRunner::PHCRunner( std::string const& pathToPHC,
-                                double const resolutionSize, unsigned const int taskcount ) :
+                                double const resolutionSize, unsigned const int taskcount, const int randomseed_in) :
     pathToPHC( pathToPHC ),
     resolutionSize( resolutionSize ),
-    taskcount(  taskcount  )
+    taskcount(  taskcount  ),
+    randomseed( randomseed_in )
   {
   }
 
@@ -71,8 +72,21 @@ namespace VevaciousPlusPlus
 	}
 	std::string lockfile = pathToPHC + "/../busy.lock" ;
 	std::ofstream file ( lockfile.c_str() );
-	systemCommand.assign(pathToPHC +"/"+ "phc -b -t" + std::to_string(taskcount)+ " "); //calls the blackbox solver
-    systemCommand.append( PHCInputFileName );
+	if(randomseed == -1)
+	{
+        systemCommand.assign(
+                pathToPHC + "/" + "phc -b -t" + std::to_string(taskcount) +
+                " "); //calls the blackbox solver
+                std::cout<< " Calling PHC no random seed" << std::endl;
+	} else
+    {
+        systemCommand.assign(
+                pathToPHC + "/" + "phc " + "-0" + std::to_string(randomseed) + " " "-b -t" + std::to_string(taskcount) +
+                " "); //calls the blackbox solver
+                std::cout<< " Calling PHC with random seed "<< randomseed<< std::endl;
+    }
+
+	systemCommand.append( PHCInputFileName );
 	systemCommand.append(" ");
 	systemCommand.append( PHCOutputFilename );
     systemReturn = system( systemCommand.c_str() );

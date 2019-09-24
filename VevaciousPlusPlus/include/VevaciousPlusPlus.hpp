@@ -61,10 +61,12 @@ namespace VevaciousPlusPlus
     namespace Utils {
         //fixes the missing make_unique in std=-c++11
         template<typename T, typename... Args>
-        std::unique_ptr <T> make_unique(Args &&... args) {
+        std::unique_ptr <T> make_unique(Args &&... args) 
+        {
           return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
         }
-           }
+
+    }
 
   class VevaciousPlusPlus : public virtual Abstract_VevaciousPlusPlus
   {
@@ -653,6 +655,7 @@ namespace VevaciousPlusPlus
     LHPC::RestrictedXmlParser xmlParser;
     xmlParser.LoadString( constructorArguments );
 	std::string pathToPHC( "error" );
+	unsigned int randomseed(0);
     double resolutionSize( 1.0 );
 	unsigned int taskcount(1);
     while( xmlParser.ReadNextElement() )
@@ -666,8 +669,21 @@ namespace VevaciousPlusPlus
 	InterpretElementIfNameMatches( xmlParser,
                                      "Tasks",
                                      taskcount );
+	InterpretElementIfNameMatches( xmlParser,
+                                       "RandomSeed",
+                                       randomseed );
     }
-    return Utils::make_unique<PHCRunner>(  pathToPHC, resolutionSize, taskcount);
+    // PHC can get a random seed for repeating runs. Typically this needs not to be set,
+    // so if it is not found, it is set to zero. In the PHC runner though, the default
+    // value if not found it is -1.
+    if ( randomseed == 0 )
+    {
+        return Utils::make_unique<PHCRunner>(pathToPHC, resolutionSize, taskcount);
+    }
+    else
+    {
+        return Utils::make_unique<PHCRunner>(pathToPHC, resolutionSize, taskcount, randomseed);
+    }
   }
 
   // This creates a new GradientMinimizer based on the given arguments and
