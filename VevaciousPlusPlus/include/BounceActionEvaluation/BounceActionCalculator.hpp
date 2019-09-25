@@ -44,7 +44,7 @@ namespace VevaciousPlusPlus
     // dimensions at temperature T, should be set in the returned
     // BubbleProfile: S_3(T) if the temperature T given by tunnelPath is
     // greater than 0.0, S_4 otherwise.
-    virtual BubbleProfile* operator()( TunnelPath const& tunnelPath,
+    virtual std::shared_ptr<BubbleProfile> operator()( TunnelPath const& tunnelPath,
              OneDimensionalPotentialAlongPath const& pathPotential ) const = 0;
   };
 

@@ -373,10 +373,9 @@ namespace VevaciousPlusPlus
                                    thermalFalseVacuum,
                                    thermalTrueVacuum,
                                    *fitTemperature );
-      BubbleProfile* bubbleProfile( actionCalculator( straightSplinePath,
+      std::shared_ptr<BubbleProfile> bubbleProfile( actionCalculator( straightSplinePath,
                                                     potentialApproximation ) );
       straightPathActions.push_back( bubbleProfile->BounceAction() );
-      delete bubbleProfile;
     }
   }
 

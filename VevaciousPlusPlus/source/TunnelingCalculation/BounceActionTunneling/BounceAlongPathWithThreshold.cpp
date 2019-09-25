@@ -246,9 +246,11 @@ namespace VevaciousPlusPlus
         return 0.0;
       }
 
-      UndershootOvershootBubble* bestBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *bestPath, pathPotential ));
+      //UndershootOvershootBubble* bestBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *bestPath, pathPotential ));
 
-      std::shared_ptr< const BubbleProfile> bestBubble = std::make_shared<const UndershootOvershootBubble>(*bestBubbleInstance);
+      //std::shared_ptr< const BubbleProfile> bestBubble = std::make_shared<const UndershootOvershootBubble>(*bestBubbleInstance);
+
+      std::shared_ptr< const BubbleProfile> bestBubble = (*actionCalculator)( *bestPath, pathPotential );
 
       std::cout << "(EC)              raw pointer of bestBubble after creation is " << bestBubble.get()
                 << std::endl;
@@ -402,14 +404,16 @@ namespace VevaciousPlusPlus
                     << "(EC)             After creating Spline Potential.";
           std::cout << std::endl;
 
-          UndershootOvershootBubble* nextBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *nextPath, potentialApproximation ));
+          //UndershootOvershootBubble* nextBubbleInstance = dynamic_cast<UndershootOvershootBubble*>((*actionCalculator)( *nextPath, potentialApproximation ));
+
           std::cout << std::endl
                     << "(EC)             bextBubbleInstance is created";
           std::cout << std::endl;
-          std::cout << std::endl << "(EC)             address after creation is " << nextBubbleInstance <<std::endl;
+          //std::cout << std::endl << "(EC)             address after creation is " << nextBubbleInstance <<std::endl;
 
-          std::shared_ptr< const BubbleProfile> nextBubble = std::make_shared<const UndershootOvershootBubble>(*nextBubbleInstance);
+          //std::shared_ptr< const BubbleProfile> nextBubble = std::make_shared<const UndershootOvershootBubble>(*nextBubbleInstance);
 
+          std::shared_ptr< const BubbleProfile> nextBubble = (*actionCalculator)( *nextPath, potentialApproximation );
 
           std::cout << std::endl
                     << "(EC)              After creating of nextPath and nextBubble.";

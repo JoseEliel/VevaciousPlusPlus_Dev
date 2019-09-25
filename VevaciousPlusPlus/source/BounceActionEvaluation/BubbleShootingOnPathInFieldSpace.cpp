@@ -38,15 +38,16 @@ namespace VevaciousPlusPlus
   // (in GeV) thermal bounce action integrated over three dimensions at
   // temperature T, is calculated: S_3(T) if the temperature T given by
   // tunnelPath is greater than 0.0, S_4 otherwise.
-  BubbleProfile*
+  std::shared_ptr<BubbleProfile>
   BubbleShootingOnPathInFieldSpace::operator()( TunnelPath const& tunnelPath,
                   OneDimensionalPotentialAlongPath const& pathPotential ) const
   {
     std::cout<<"       (JR) entered BubbleShootingOnPathInFieldSpace::operator "<< std::endl;
-    UndershootOvershootBubble* bubbleProfile( new UndershootOvershootBubble( radialStepSize,
+
+    std::shared_ptr<UndershootOvershootBubble> bubbleProfile = std::make_shared<UndershootOvershootBubble>( radialStepSize,
                                                   estimatedRadialMaximum,
                                                   shootAttempts,
-                                                  auxiliaryThreshold ) );
+                                                  auxiliaryThreshold );
     std::cout<<"       (JR) after new  UndershootOvershootBubble"<< std::endl;
     //std::cout<<"       (JR) try to call 0th elem of AuxiliaryProfile"<< bubbleProfile->AuxiliaryProfile().at(0).radialValue << std::endl;
     //std::cout<<"       (JR) try to call 0th elem of AuxiliaryProfile"<< bubbleProfile->AuxiliaryProfile().at(0).auxiliaryValue << std::endl;
@@ -297,7 +298,7 @@ namespace VevaciousPlusPlus
                                         * boost::math::double_constants::pi );
     }
     //std::cout<<"       (JR) before return bubbleProfile"<< std::endl;
-    return bubbleProfile;
+    return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
   }
 
 } /* namespace VevaciousPlusPlus */
