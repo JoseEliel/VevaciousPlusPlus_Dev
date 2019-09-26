@@ -42,12 +42,17 @@ namespace VevaciousPlusPlus
     std::cout << std::endl
               << "(EC)             CONSTRUCTOR SAYS: Just created a UndershootOvershootBubble"<<" at "<<&(*this)<<std::endl;
     std::cout << std::endl;
+
+    std::cerr << std::endl
+              << "(EC)             CONSTRUCTOR SAYS: Just created a UndershootOvershootBubble"<<" at "<<&(*this)<<std::endl;
+    std::cerr << std::endl;
   }
 
   UndershootOvershootBubble::~UndershootOvershootBubble()
   {
     // Debug print
     std::cout<< "(EC)              A undershootOvershootBubble: BubbleProfile has been destructed"<<" at "<<&(*this)<<std::endl;
+    std::cerr<< "(EC)              A undershootOvershootBubble: BubbleProfile has been destructed"<<" at "<<&(*this)<<std::endl;
   }
 
 
@@ -327,6 +332,8 @@ namespace VevaciousPlusPlus
                                                  TunnelPath const& tunnelPath )
   {
     std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
+    
+
     // We start from the beginning of odeintProfile so that we record only as
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
@@ -336,6 +343,29 @@ namespace VevaciousPlusPlus
     {
       // If the shot has gone past the false vacuum, it was definitely an
       // overshoot.
+
+        if(odeintProfile.size() <= 1 || std::isnan(auxiliaryAtRadialInfinity))
+           {
+              if(badInitialConditions)
+              {
+                      std::cout<<"BAD INITIAL CONDITIONS TWICE" << std::endl;
+                      std::stringstream errorBuilder;
+                      errorBuilder
+                      << std::endl
+                      << "Integrating the bounce has gone really wrong even after trying again with rescaled radius."
+                      <<std::endl;
+                      throw std::runtime_error( errorBuilder.str() );
+              }else
+              {
+                      std::cout<<"BAD INITIAL CONDITIONS, rethrowing." << std::endl;
+                      badInitialConditions = true;
+                      odeintProfile.clear();
+                      return;
+              }
+
+           }
+
+
       if( odeintProfile.at(radialIndex).auxiliaryValue
           < auxiliaryAtRadialInfinity )
       {
@@ -368,7 +398,7 @@ namespace VevaciousPlusPlus
       {
         badInitialConditions = false;
 //       if(add_to_aux==false){std::cout<<"                     (JR) 1. appended vals to Aux profile"<<std::endl;add_to_aux=true;}
-
+        
         auxiliaryProfile.insert( auxiliaryProfile.end(),
                                  ( odeintProfile.begin() + 1 ),
                                  ( odeintProfile.begin() + radialIndex ) );
@@ -391,6 +421,7 @@ namespace VevaciousPlusPlus
                   << " but still detected numerical problems. "<<std::endl;
 
           throw std::runtime_error( errorBuilder.str() );
+
         }
         else
         {

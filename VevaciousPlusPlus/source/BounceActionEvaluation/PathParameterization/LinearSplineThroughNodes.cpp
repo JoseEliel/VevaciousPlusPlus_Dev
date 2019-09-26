@@ -60,12 +60,17 @@ namespace VevaciousPlusPlus
     std::cout << std::endl
               << "(EC)            CONSTRUCTOR SAYS: Just created a LinearSplineThroughNodes"<<" at "<<&(*this)<<std::endl;
     std::cout << std::endl;
+    std::cerr << std::endl
+              << "(EC)            CONSTRUCTOR SAYS: Just created a LinearSplineThroughNodes"<<" at "<<&(*this)<<std::endl;
+    std::cerr << std::endl;
   }
 
   LinearSplineThroughNodes::~LinearSplineThroughNodes()
   {
     // Debug print
     std::cout<< "(EC)               A LinearSplineThroughNodes: TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;
+    std::cerr<< "(EC)               A LinearSplineThroughNodes: TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;
+
   }
 
 } /* namespace VevaciousPlusPlus */
