@@ -44,6 +44,13 @@ namespace VevaciousPlusPlus
     // to be the minimum in panicVacua closest to dsbVacuum).
     virtual void FindMinima( double const minimizationTemperature = 0.0 ) = 0;
 
+    // This sets the option of whether to tunnel to the global minimum 
+    // or to the closest minimum in field space. It can alternatively
+    // be given in the XML input file for the potential minimizer.
+    // the default is "false". 
+
+    virtual void setWhichPanicVacuum( bool global_Is_Panic_setting) = 0;
+
     // This should find the minimum at temperature minimizationTemperature
     // nearest to minimumToAdjust (which is assumed to be a minimum of the
     // potential at a different temperature).
@@ -84,6 +91,7 @@ namespace VevaciousPlusPlus
     PotentialMinimum dsbVacuum;
     std::vector< PotentialMinimum > panicVacua;
     PotentialMinimum panicVacuum;
+    bool global_Is_Panic;
 
     // This returns false if the vector of the absolute values of the fields of
     // comparisonMinimum lies within a hypercube of side thresholdDistance

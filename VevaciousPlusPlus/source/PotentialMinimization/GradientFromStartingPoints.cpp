@@ -228,7 +228,16 @@ namespace VevaciousPlusPlus
         }
         std::cout << std::endl;
         std::cout << std::endl;
+    }
 
+    // This sets whether the nearest minimum is the one chosen for tunneling
+    // or if the global minimum is chosen instead. 
 
- }
+    void GradientFromStartingPoints::setWhichPanicVacuum( bool global_Is_Panic_setting) 
+    {
+       
+       global_Is_Panic = global_Is_Panic_setting;
+    
+    }
+
 }/* namespace VevaciousPlusPlus */

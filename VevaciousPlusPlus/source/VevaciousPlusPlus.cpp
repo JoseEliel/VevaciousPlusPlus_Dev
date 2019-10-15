@@ -116,6 +116,11 @@ namespace VevaciousPlusPlus
   // This runs the point parameterized by newInput, which for the default
   // case gives the name of a file with the input parameters, but could in
   // principle itself contain all the necessary parameters.
+  // In the cases where Vevacious is being run as a library, 
+  // the parameter values are being fed with vevaciousPlusPlus.ReadLhaBlock.
+  // In that case, newInput can be either "global" or "nearest", to indicate
+  // which minimum should Vevacious tunnel to. 
+  
   void VevaciousPlusPlus::RunPoint( std::string const& newInput )
   {
     warningMessagesFromLastRun.clear();
@@ -133,6 +138,15 @@ namespace VevaciousPlusPlus
 
     time( &stageStartTime );
     lagrangianParameterManager->NewParameterPoint( newInput );
+
+    // Here we check whether Vevacious is being used as a library
+    // and if so, which option for the vacuum to tunnel to is being used
+    // i.e. the global minimum or the nearest minimum in field space.
+
+    if(newInput == "global"){ potentialMinimizer->setWhichPanicVacuum(true);}
+
+    if(newInput == "nearest"){ potentialMinimizer->setWhichPanicVacuum(false);}
+
     potentialMinimizer->FindMinima( 0.0 );
     time( &stageEndTime );
     std::cout << std::endl
@@ -170,7 +184,7 @@ namespace VevaciousPlusPlus
                                               runStartTime )
     << " seconds, finished at " << ctime( &runEndTime );
     std::cout << std::endl;
-    if( newInput == "internal" ){lagrangianParameterManager->ClearParameterPoint(); }
+    if( newInput == "global" || newInput == "nearest" || newInput == "internal" ){lagrangianParameterManager->ClearParameterPoint(); }
   }
   
   // This writes the results as an SLHA file.
