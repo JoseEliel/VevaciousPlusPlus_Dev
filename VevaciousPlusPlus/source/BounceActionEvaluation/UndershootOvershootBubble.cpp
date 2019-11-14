@@ -331,7 +331,7 @@ namespace VevaciousPlusPlus
   void UndershootOvershootBubble::RecordFromOdeintProfile(
                                                  TunnelPath const& tunnelPath )
   {
-    std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
+    //std::cout<<"                                     (JR) Enter UndershootOvershootBubble::RecordFromOdeintProfile, odeintProfile size "<< odeintProfile.size()<< std::endl;
     
 
     // We start from the beginning of odeintProfile so that we record only as
