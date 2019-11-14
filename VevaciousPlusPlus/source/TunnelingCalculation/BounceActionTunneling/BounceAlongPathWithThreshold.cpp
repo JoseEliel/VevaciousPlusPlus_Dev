@@ -313,7 +313,10 @@ namespace VevaciousPlusPlus
 
 
 
-
+      // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
+      std::cout<<" ====== (JR) this is a memory leak fix attempt ==== " << std::endl;
+      std::shared_ptr< const TunnelPath> currentPath(bestPath);
+      std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
       for( auto pathFinder( pathFinders.begin() );
            pathFinder < pathFinders.end();
@@ -341,8 +344,6 @@ namespace VevaciousPlusPlus
                   << "(EC)              Before assignment of currentPath and currentBubble.";
         std::cout << std::endl;
 
-        std::shared_ptr< const TunnelPath> currentPath(bestPath);
-        std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
         std::cout << std::endl
                   << "(EC)              After assignment of currentPath and currentBubble.";
@@ -492,6 +493,9 @@ namespace VevaciousPlusPlus
         }
       }
 
+      currentPath = NULL;
+      currentBubble = NULL;
+
       std::cout << std::endl
                 << "Lowest path bounce action at " << tunnelingTemperature << " GeV was "
                 << bestBubble->BounceAction();
@@ -508,6 +512,9 @@ namespace VevaciousPlusPlus
       std::cout << std::endl;
 
       double const bounceAction( bestBubble->BounceAction() );
+
+      bestPath = NULL;
+      bestBubble = NULL;
       return bounceAction;
     }
 
