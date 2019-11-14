@@ -338,7 +338,7 @@ namespace VevaciousPlusPlus
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
     size_t radialIndex( 0 );
-    std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
+    //std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
       // If the shot has gone past the false vacuum, it was definitely an

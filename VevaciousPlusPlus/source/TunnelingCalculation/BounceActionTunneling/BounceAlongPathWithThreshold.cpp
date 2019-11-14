@@ -226,14 +226,14 @@ namespace VevaciousPlusPlus
                                     falseVacuum,
                                     trueVacuum,
                                     tunnelingTemperature );
-      std::cout<<"(JR) after ResetVacua " << std::endl;
+      //std::cout<<"(JR) after ResetVacua " << std::endl;
 //    std::cout<<"(JR) pathPotentialResolution "<< pathPotentialResolution << std::endl;
 
       SplinePotential pathPotential( potentialFunction,
                                      *bestPath,
                                      pathPotentialResolution,
                                      requiredVacuumSeparationSquared );
-      std::cout<<"(JR) after SplinePotential " << std::endl;
+      //std::cout<<"(JR) after SplinePotential " << std::endl;
 
       if( !(pathPotential.EnergyBarrierWasResolved()) )
       {
@@ -243,6 +243,7 @@ namespace VevaciousPlusPlus
                        << " vacuum and true vacuum: returning bounce action of zero (which"
                        << " should be sufficient to exclude the parameter point).";
         WarningLogger::LogWarning( warningBuilder.str() );
+        bestPath = NULL;
         return 0.0;
       }
 
@@ -287,6 +288,8 @@ namespace VevaciousPlusPlus
                 << " for further path improvements.";
         std::cout << std::endl;
         double const bounceAction( bestBubble->BounceAction() );
+        bestBubble = NULL;
+        bestPath = NULL;
         return bounceAction;
       }
 
@@ -301,6 +304,8 @@ namespace VevaciousPlusPlus
                 << pathDeformation ;
         std::cout << std::endl;
         double const bounceAction( bestBubble->BounceAction() );
+        bestBubble = NULL;
+        bestPath = NULL;
         return bounceAction;
       }
 
@@ -314,7 +319,7 @@ namespace VevaciousPlusPlus
 
 
       // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
-      std::cout<<" ====== (JR) this is a memory leak fix attempt ==== " << std::endl;
+      std::cout<<" ====== (JR) this is a memory leak fix attempt # 2 with strawberries ==== " << std::endl;
       std::shared_ptr< const TunnelPath> currentPath(bestPath);
       std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
@@ -328,6 +333,10 @@ namespace VevaciousPlusPlus
         {
           std::stringstream errorBuilder;
           errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << " seconds.";
+          bestBubble = NULL;
+          bestPath = NULL;
+          currentBubble = NULL;
+          currentPath = NULL;
           throw std::runtime_error( errorBuilder.str() );
           break;
         };
@@ -379,6 +388,10 @@ namespace VevaciousPlusPlus
           {
             std::stringstream errorBuilder;
             errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << "seconds.";
+            bestBubble = NULL;
+            bestPath = NULL;
+            currentBubble = NULL;
+            currentPath = NULL;
             throw std::runtime_error( errorBuilder.str() );
             break;
           };
@@ -465,7 +478,13 @@ namespace VevaciousPlusPlus
           }
           std::cout << ".";
           std::cout << std::endl;
-        } while( ( bestBubble->BounceAction() > actionThreshold )
+
+          nextPath = NULL;
+          nextBubble = NULL;
+        
+        } 
+
+        while( ( bestBubble->BounceAction() > actionThreshold )
                  &&
                  (*pathFinder)->PathCanBeImproved( *currentBubble ) );
 
@@ -488,7 +507,10 @@ namespace VevaciousPlusPlus
                   << "Bounce action dropped below threshold, breaking off from looking"
                   << " for further path improvements.";
           std::cout << std::endl;
-
+          bestBubble = NULL;
+          bestPath = NULL;
+          currentBubble = NULL;
+          currentPath = NULL;
           break;
         }
       }
@@ -519,3 +541,4 @@ namespace VevaciousPlusPlus
     }
 
 } /* namespace VevaciousPlusPlus */
+
