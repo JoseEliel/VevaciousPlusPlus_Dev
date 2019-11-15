@@ -319,7 +319,7 @@ namespace VevaciousPlusPlus
 
 
       // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
-      std::cout<<" ====== (JR) this is a memory leak fix attempt # 3 ==== " << std::endl;
+      std::cout<<" ====== (JR) this is a memory leak fix attempt # 4 ==== " << std::endl;
       std::shared_ptr< const TunnelPath> currentPath(bestPath);
       std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 

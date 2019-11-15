@@ -298,7 +298,10 @@ namespace VevaciousPlusPlus
                                         * boost::math::double_constants::pi );
     }
     //std::cout<<"       (JR) before return bubbleProfile"<< std::endl;
-    return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
+    std::shared_ptr<BubbleProfile> result = std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
+    //return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
+    bubbleProfile = NULL;
+    return result;
   }
 
 } /* namespace VevaciousPlusPlus */

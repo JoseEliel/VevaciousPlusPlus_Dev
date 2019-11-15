@@ -354,6 +354,7 @@ namespace VevaciousPlusPlus
                       << std::endl
                       << "Integrating the bounce has gone really wrong even after trying again with rescaled radius."
                       <<std::endl;
+                      odeintProfile.clear();
                       throw std::runtime_error( errorBuilder.str() );
               }else
               {
@@ -419,7 +420,7 @@ namespace VevaciousPlusPlus
                   << std::endl
                   << " Set the integration start radius to the center of the bubble "
                   << " but still detected numerical problems. "<<std::endl;
-
+          odeintProfile.clear();
           throw std::runtime_error( errorBuilder.str() );
 
         }
