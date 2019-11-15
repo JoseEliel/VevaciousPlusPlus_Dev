@@ -319,7 +319,7 @@ namespace VevaciousPlusPlus
 
 
       // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
-      std::cout<<" ====== (JR) this is a memory leak fix attempt # 2 with strawberries ==== " << std::endl;
+      std::cout<<" ====== (JR) this is a memory leak fix attempt # 3 ==== " << std::endl;
       std::shared_ptr< const TunnelPath> currentPath(bestPath);
       std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
@@ -388,10 +388,6 @@ namespace VevaciousPlusPlus
           {
             std::stringstream errorBuilder;
             errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << "seconds.";
-            bestBubble = NULL;
-            bestPath = NULL;
-            currentBubble = NULL;
-            currentPath = NULL;
             throw std::runtime_error( errorBuilder.str() );
             break;
           };
@@ -507,10 +503,6 @@ namespace VevaciousPlusPlus
                   << "Bounce action dropped below threshold, breaking off from looking"
                   << " for further path improvements.";
           std::cout << std::endl;
-          bestBubble = NULL;
-          bestPath = NULL;
-          currentBubble = NULL;
-          currentPath = NULL;
           break;
         }
       }
