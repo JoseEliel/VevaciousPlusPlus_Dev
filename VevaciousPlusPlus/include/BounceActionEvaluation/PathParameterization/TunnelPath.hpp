@@ -26,9 +26,9 @@ namespace VevaciousPlusPlus
       numberOfFields( numberOfFields ),
       pathParameterization( pathParameterization ),
       pathTemperature( pathTemperature ),
-      nonZeroTemperature( pathTemperature > 0.0 ) {}
+      nonZeroTemperature( pathTemperature > 0.0 ) { std::cout<< "(EC)               A TunnelPath has been created "<<" at "<<&(*this)<<std::endl;}
 
-    virtual ~TunnelPath() {}
+    virtual ~TunnelPath() { std::cout<< "(EC)               A TunnelPath has been destructed"<<" at "<<&(*this)<<std::endl;}
 
 
     std::vector< double >& PathParameterization()

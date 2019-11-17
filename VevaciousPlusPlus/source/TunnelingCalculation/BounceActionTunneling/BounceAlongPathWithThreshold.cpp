@@ -288,8 +288,8 @@ namespace VevaciousPlusPlus
                 << " for further path improvements.";
         std::cout << std::endl;
         double const bounceAction( bestBubble->BounceAction() );
-        bestBubble = NULL;
-        bestPath = NULL;
+        bestBubble.reset();
+        bestPath.reset();
         return bounceAction;
       }
 
@@ -304,8 +304,8 @@ namespace VevaciousPlusPlus
                 << pathDeformation ;
         std::cout << std::endl;
         double const bounceAction( bestBubble->BounceAction() );
-        bestBubble = NULL;
-        bestPath = NULL;
+        bestBubble.reset();
+        bestPath.reset();
         return bounceAction;
       }
 
@@ -319,7 +319,7 @@ namespace VevaciousPlusPlus
 
 
       // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
-      std::cout<<" ====== (JR) this is a memory leak fix attempt # 4 ==== " << std::endl;
+      std::cout<<" ====== (JR) this is a memory leak fix attempt # 5c ==== " << std::endl;
       std::shared_ptr< const TunnelPath> currentPath(bestPath);
       std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
@@ -333,10 +333,10 @@ namespace VevaciousPlusPlus
         {
           std::stringstream errorBuilder;
           errorBuilder << "Path finder has been running longer than the specified timeout of " << pathFindingTimeout << " seconds.";
-          bestBubble = NULL;
-          bestPath = NULL;
-          currentBubble = NULL;
-          currentPath = NULL;
+          bestBubble.reset();
+          bestPath.reset();
+          currentBubble.reset();
+          currentPath.reset();
           throw std::runtime_error( errorBuilder.str() );
           break;
         };
@@ -475,8 +475,8 @@ namespace VevaciousPlusPlus
           std::cout << ".";
           std::cout << std::endl;
 
-          nextPath = NULL;
-          nextBubble = NULL;
+          nextPath.reset();
+          nextBubble.reset();
         
         } 
 
@@ -507,8 +507,8 @@ namespace VevaciousPlusPlus
         }
       }
 
-      currentPath = NULL;
-      currentBubble = NULL;
+      currentPath.reset();
+      currentBubble.reset();
 
       std::cout << std::endl
                 << "Lowest path bounce action at " << tunnelingTemperature << " GeV was "
@@ -527,8 +527,8 @@ namespace VevaciousPlusPlus
 
       double const bounceAction( bestBubble->BounceAction() );
 
-      bestPath = NULL;
-      bestBubble = NULL;
+      bestPath.reset();
+      bestBubble.reset();
       return bounceAction;
     }
 
