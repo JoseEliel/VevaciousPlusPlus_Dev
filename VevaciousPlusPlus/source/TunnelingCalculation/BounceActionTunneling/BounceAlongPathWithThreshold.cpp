@@ -243,7 +243,7 @@ namespace VevaciousPlusPlus
                        << " vacuum and true vacuum: returning bounce action of zero (which"
                        << " should be sufficient to exclude the parameter point).";
         WarningLogger::LogWarning( warningBuilder.str() );
-        bestPath = NULL;
+        bestPath.reset();
         return 0.0;
       }
 
