@@ -13,6 +13,7 @@
 #include "Eigen/Dense"
 #include <string>
 #include <sstream>
+#include <iostream>
 
 namespace VevaciousPlusPlus
 {

@@ -10,6 +10,7 @@
 
 #include "PathParameterization/TunnelPath.hpp"
 #include "OneDimensionalPotentialAlongPath.hpp"
+#include <iostream>
 
 namespace VevaciousPlusPlus
 {
