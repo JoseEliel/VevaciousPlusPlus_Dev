@@ -300,7 +300,12 @@ namespace VevaciousPlusPlus
     //std::cout<<"       (JR) before return bubbleProfile"<< std::endl;
     std::shared_ptr<BubbleProfile> result = std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
     //return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
-    bubbleProfile = NULL;
+    std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.get_cout()<< std::endl;
+    auxiliaryProfile.clear();
+    bubbleProfile.reset();
+    std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.get_cout() << " after reset" << std::endl;
+    std::cout<<"       (JR) BubbleProfile before returning managing "<< result.get_cout() << " after reset" << std::endl;
+    
     return result;
   }
 

@@ -375,6 +375,8 @@ namespace VevaciousPlusPlus
                                    *fitTemperature );
       std::shared_ptr<BubbleProfile> bubbleProfile( actionCalculator( straightSplinePath,
                                                     potentialApproximation ) );
+      std::cout<<"         =======> (JR) BubbleProfile after creation managing "<< bubbleProfile.get_cout() << " after reset" << std::endl;
+    
       straightPathActions.push_back( bubbleProfile->BounceAction() );
     }
   }

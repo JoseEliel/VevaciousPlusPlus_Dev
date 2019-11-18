@@ -319,7 +319,7 @@ namespace VevaciousPlusPlus
 
 
       // (JR) moved outside of for loop to be able to set to null after , attempt to fix mem leak
-      std::cout<<" ====== (JR) this is a memory leak fix attempt # 5c ==== " << std::endl;
+      std::cout<<" ====== (JR) this is a memory leak fix attempt # 5d ==== " << std::endl;
       std::shared_ptr< const TunnelPath> currentPath(bestPath);
       std::shared_ptr< const BubbleProfile> currentBubble(bestBubble);
 
@@ -529,6 +529,8 @@ namespace VevaciousPlusPlus
 
       bestPath.reset();
       bestBubble.reset();
+      std::cout<<"       (JR) END OF FUNCTION bestBubble managing "<< bestBubble.get_cout() << " after reset" << std::endl;
+      std::cout<<"       (JR) END OF FUNCTION bestPath managing "<< bestPath.get_cout() << " after reset" << std::endl;
       return bounceAction;
     }
 
