@@ -475,12 +475,12 @@ namespace VevaciousPlusPlus
           std::cout << ".";
           std::cout << std::endl;
 
-          std::cout<<"       (JR) nextPath managing "<< nextPath.get_cout() << "" << std::endl;
-          std::cout<<"       (JR) nextBubble managing "<< nextBubble.get_cout() << "" << std::endl;
+          std::cout<<"       (JR) nextPath managing "<< nextPath.use_count() << "" << std::endl;
+          std::cout<<"       (JR) nextBubble managing "<< nextBubble.use_count() << "" << std::endl;
           nextPath.reset();
           nextBubble.reset();
-          std::cout<<"       (JR) nextPath managing "<< nextPath.get_cout() << " after reset" << std::endl;
-          std::cout<<"       (JR) nextBubble managing "<< nextBubble.get_cout() << " after reset" << std::endl;
+          std::cout<<"       (JR) nextPath managing "<< nextPath.use_count() << " after reset" << std::endl;
+          std::cout<<"       (JR) nextBubble managing "<< nextBubble.use_count() << " after reset" << std::endl;
         
         } 
 
@@ -511,12 +511,12 @@ namespace VevaciousPlusPlus
         }
       }
 
-      std::cout<<"       (JR) currentPath managing "<< currentPath.get_cout() << "" << std::endl;
-      std::cout<<"       (JR) currentBubble managing "<< currentBubble.get_cout() << "" << std::endl;
+      std::cout<<"       (JR) currentPath managing "<< currentPath.use_count() << "" << std::endl;
+      std::cout<<"       (JR) currentBubble managing "<< currentBubble.use_count() << "" << std::endl;
       currentPath.reset();
       currentBubble.reset();
-      std::cout<<"       (JR) currentPath managing "<< currentPath.get_cout() << " after reset" << std::endl;
-      std::cout<<"       (JR) currentBubble managing "<< currentBubble.get_cout() << " after reset" << std::endl;
+      std::cout<<"       (JR) currentPath managing "<< currentPath.use_count() << " after reset" << std::endl;
+      std::cout<<"       (JR) currentBubble managing "<< currentBubble.use_count() << " after reset" << std::endl;
 
       std::cout << std::endl
                 << "Lowest path bounce action at " << tunnelingTemperature << " GeV was "
