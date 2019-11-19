@@ -301,10 +301,10 @@ namespace VevaciousPlusPlus
     // (JR) commented out and return pointer without putting it into a variable
     //std::shared_ptr<BubbleProfile> result = std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
     //return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
-    std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.get_cout()<< std::endl;
-    auxiliaryProfile.clear();
-    bubbleProfile.reset();
-    std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.get_cout() << " after reset" << std::endl;
+    std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.use_count() << " apples "<< std::endl;
+    //auxiliaryProfile.clear();
+    //bubbleProfile.reset();
+    //std::cout<<"       (JR) bubbleProfile managing "<< bubbleProfile.use_count() << " after reset" << std::endl;
     //std::cout<<"       (JR) BubbleProfile before returning managing "<< result.get_cout() << " after reset" << std::endl;
     return std::dynamic_pointer_cast<BubbleProfile>(bubbleProfile);
   }
