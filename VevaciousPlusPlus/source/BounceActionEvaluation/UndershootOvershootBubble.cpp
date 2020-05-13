@@ -339,7 +339,7 @@ namespace VevaciousPlusPlus
     // backwards or overshoot.
     size_t radialIndex( 0 );
     bool noreshoot = true;
-    
+
     //std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
@@ -350,7 +350,7 @@ namespace VevaciousPlusPlus
            {
               if(badInitialConditions || noreshoot)
               {
-                      std::cout<<"BAD INITIAL CONDITIONS TWICE" << std::endl;
+                      std::cout<<"BAD INITIAL CONDITIONS TWICE (or No-Reshoot enabled)" << std::endl;
                       std::stringstream errorBuilder;
                       errorBuilder
                       << std::endl
@@ -416,7 +416,7 @@ namespace VevaciousPlusPlus
         if(badInitialConditions || noreshoot)
         {
          // If we are here, we tried to fix this before, it did not work so we throw an error.
-          std::cout<<"  BAD CONDITIONS TWICE" << std::endl;
+          std::cout<<"  BAD CONDITIONS TWICE (OR NO-RESHOOT ENABLED)" << std::endl;
           std::stringstream errorBuilder;
           errorBuilder
                   << std::endl
