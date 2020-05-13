@@ -338,6 +338,8 @@ namespace VevaciousPlusPlus
     // much of the bubble profile as there is before the shot starts to roll
     // backwards or overshoot.
     size_t radialIndex( 0 );
+    bool noreshoot = true;
+    
     //std::cout<<"                                               (JR) enter while loop with odeintProfile.at(radialIndex).auxiliaryValue "<< odeintProfile.at(radialIndex).auxiliaryValue << " and " << auxiliaryAtRadialInfinity<< std::endl;
     while( radialIndex < odeintProfile.size() )
     {
@@ -346,7 +348,7 @@ namespace VevaciousPlusPlus
 
         if(odeintProfile.size() <= 1 || std::isnan(auxiliaryAtRadialInfinity))
            {
-              if(badInitialConditions)
+              if(badInitialConditions || noreshoot)
               {
                       std::cout<<"BAD INITIAL CONDITIONS TWICE" << std::endl;
                       std::stringstream errorBuilder;
@@ -411,7 +413,7 @@ namespace VevaciousPlusPlus
         // (in reality we set it to be the integration stepsize.
         // this happens in ShootFromInitialConditions.
 
-        if(badInitialConditions)
+        if(badInitialConditions || noreshoot)
         {
          // If we are here, we tried to fix this before, it did not work so we throw an error.
           std::cout<<"  BAD CONDITIONS TWICE" << std::endl;
