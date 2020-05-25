@@ -251,14 +251,30 @@ namespace VevaciousPlusPlus
                                            PotentialMinimum const& falseVacuum,
                                            PotentialMinimum const& trueVacuum )
   {
-    // First we check whether we exclude the parameter point based on DSB being
+
+    // First we set up the (square of the) threshold distance that we demand
+    // between the vacua at every temperature to trust the tunneling
+    // calculation.
+    
+    double const thresholdSeparationSquared( vacuumSeparationFractionSquared 
+       * falseVacuum.SquareDistanceTo( trueVacuum ) );
+
+
+    // Here we check whether we are in the case when the false vacuum is actually
+    // the field origin. 
+
+    bool DsbRolledToOrigin( falseVacuum.LengthSquared()
+                                      < thresholdSeparationSquared );
+
+
+    // Second we check whether we exclude the parameter point based on DSB being
     // less deep than origin.
     std::vector< double > const&
     fieldOrigin( potentialFunction.FieldValuesOrigin() );
     double const
     potentialAtOriginAtZeroTemperature( potentialFunction( fieldOrigin ) );
     if( potentialFunction( falseVacuum.FieldConfiguration() )
-        > potentialAtOriginAtZeroTemperature )
+        > potentialAtOriginAtZeroTemperature && !DsbRolledToOrigin)
     {
       dominantTemperatureInGigaElectronVolts = 0.0;
       thermalSurvivalProbability = 0.0;
