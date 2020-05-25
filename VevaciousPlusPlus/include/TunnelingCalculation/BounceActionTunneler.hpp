@@ -211,9 +211,6 @@ namespace VevaciousPlusPlus
                                          rangeOfMaxTemperatureForOriginToTrue,
                                          trueVacuum,
                                          potentialAtOriginAtZeroTemperature );
-
-
-    std::cout<< std::
   }
 
   // This returns true if the temperature is below that at which tunneling
