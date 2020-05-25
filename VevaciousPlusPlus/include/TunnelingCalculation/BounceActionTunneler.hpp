@@ -176,7 +176,7 @@ namespace VevaciousPlusPlus
     // the field origin. 
 
     bool DsbRolledToOrigin( falseVacuum.LengthSquared()
-                                      < thresholdSeparationSquared )
+                                      < thresholdSeparationSquared );
 
     if(DsbRolledToOrigin)
         {
