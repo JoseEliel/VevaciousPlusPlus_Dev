@@ -307,20 +307,6 @@ namespace VevaciousPlusPlus
     // each time. If it was above, we start halving the temperature, recording
     // the previous temperature each time.
 
-    bool DsbRolledToOrigin( dsbVacuum.LengthSquared()
-                                      < thresholdSeparationSquared )
-
-    if(DsbRolledToOrigin)
-        {
-          rangeOfMaxTemperature.first = maximumAllowedTemperature;
-          rangeOfMaxTemperature.second = maximumAllowedTemperature;
-          std::cout << "We are tunneling from the origin as DSB is not"
-          << " present at one-loop. Setting maximum temperature to the Planck scale";
-          std::cout << std::endl;
-          return;
-        }
-
-
     std::cout << "Trying " << temperatureGuess << " GeV.";
     std::cout << std::endl;
 
