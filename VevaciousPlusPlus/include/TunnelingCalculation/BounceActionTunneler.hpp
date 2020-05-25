@@ -187,7 +187,6 @@ namespace VevaciousPlusPlus
           << " present at one-loop. Setting maximum temperature at which"
           << " the false vacuum is still present to the Planck scale";
           std::cout << std::endl;
-          return;
         }
     else
         {
@@ -212,6 +211,9 @@ namespace VevaciousPlusPlus
                                          rangeOfMaxTemperatureForOriginToTrue,
                                          trueVacuum,
                                          potentialAtOriginAtZeroTemperature );
+
+
+    std::cout<< std::
   }
 
   // This returns true if the temperature is below that at which tunneling
