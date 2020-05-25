@@ -136,6 +136,12 @@ namespace VevaciousPlusPlus
                                              * currentTemperature
                                              * ( thresholdDecayWidth
                                                  - partialDecayWidth ) ) );
+        std::cout << " Pieces for threshold" 
+                  << currentTemperature 
+                  << thresholdDecayWidth 
+                  << partialDecayWidth << std::endl;
+
+
         double const
                 bounceOverTemperature( BoundedBounceAction( potentialFunction,
                                                             thermalFalseVacuum,
