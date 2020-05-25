@@ -136,13 +136,13 @@ namespace VevaciousPlusPlus
                                              * currentTemperature
                                              * ( thresholdDecayWidth
                                                  - partialDecayWidth ) ) );
-        std::cout << " EC:                           Pieces for threshold" 
-                  << std::endl
-                  << currentTemperature 
-                  << std::endl
-                  << thresholdDecayWidth 
-                  << std::endl
-                  << partialDecayWidth << std::endl;
+        // std::cout << " EC:                           Pieces for threshold" 
+        //           << std::endl
+        //           << currentTemperature 
+        //           << std::endl
+        //           << thresholdDecayWidth 
+        //           << std::endl
+        //           << partialDecayWidth << std::endl;
 
 
         double const
