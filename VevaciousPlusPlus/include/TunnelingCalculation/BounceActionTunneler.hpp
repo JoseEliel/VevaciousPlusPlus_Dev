@@ -168,8 +168,8 @@ namespace VevaciousPlusPlus
     // between the vacua at every temperature to trust the tunneling
     // calculation.
     
-    double const thresholdSeparationSquared( vacuumSeparationFraction *
-        vacuumSeparationFraction * falseVacuum.SquareDistanceTo( trueVacuum ) );
+    double const thresholdSeparationSquared( vacuumSeparationFractionSquared 
+       * falseVacuum.SquareDistanceTo( trueVacuum ) );
 
 
     // Here we check whether we are in the case when the false vacuum is actually
