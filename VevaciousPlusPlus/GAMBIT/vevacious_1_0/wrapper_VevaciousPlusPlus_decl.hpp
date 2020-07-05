@@ -39,6 +39,8 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
 
                 double GetThermalProbability();
 
+                double GetThermalDecayWidth();
+
                 ::std::vector<double> GetThresholdAndActions();
 
                 ::std::vector<double> GetThermalThresholdAndActions();

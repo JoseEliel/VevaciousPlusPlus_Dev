@@ -184,6 +184,10 @@ namespace VevaciousPlusPlus
                                               runStartTime )
     << " seconds, finished at " << ctime( &runEndTime );
     std::cout << std::endl;
+    //double thermaldecaywidth = tunnelingCalculator->PartialThermalDecayWidth();
+
+    //std::cout << "Thermal Decay width = " << thermaldecaywidth << std::endl;
+
     if( newInput == "global" || newInput == "nearest" || newInput == "internal" ){lagrangianParameterManager->ClearParameterPoint(); }
   }
   

@@ -118,7 +118,9 @@ namespace VevaciousPlusPlus
     quantumSurvivalProbability = -1.0;
     quantumLifetimeInSeconds = -1.0;
     thermalSurvivalProbability = -1.0;
+    partialThermalDecayWidth = -1.0;
     dominantTemperatureInGigaElectronVolts = -1.0;
+
 
     if( tunnelingStrategy == NoTunneling )
     {
@@ -444,5 +446,29 @@ namespace VevaciousPlusPlus
       = exp( -exp( logOfMinusLogOfThermalProbability ) );
     }
   }
+
+  void BounceActionTunneler::SetPartialThermalDecayWidth( double partialDecayWidth)
+  {
+    if( logOfMinusLogOfThermalProbability >= maximumPowerOfNaturalExponent )
+    {
+      partialThermalDecayWidth = -1.0;
+    }
+    else if( logOfMinusLogOfThermalProbability
+             <= -maximumPowerOfNaturalExponent )
+    {
+      partialThermalDecayWidth = 0.0;
+    }
+    else if( exp( logOfMinusLogOfThermalProbability )
+             >= maximumPowerOfNaturalExponent )
+    {
+      partialThermalDecayWidth = 1E100;
+    }
+    else
+    {
+      partialThermalDecayWidth = partialDecayWidth;
+    }
+  }
+
+
 
 } /* namespace VevaciousPlusPlus */
