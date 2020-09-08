@@ -42,6 +42,11 @@ namespace CAT_3(BACKENDNAME,_,SAFE_VERSION)
             return get_BEptr()->GetThermalProbability();
         }
 
+        inline double VevaciousPlusPlus::GetThermalDecayWidth()
+        {
+            return get_BEptr()->GetThermalDecayWidth();
+        }
+
          inline ::std::vector<double> VevaciousPlusPlus::GetThresholdAndActions()
         {
             return get_BEptr()->GetThresholdAndActions();
