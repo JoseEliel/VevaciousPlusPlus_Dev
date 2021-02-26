@@ -140,6 +140,30 @@ namespace VevaciousPlusPlus
     void AppendResultsToLhaFile( std::string const& lhaFilename,
                                  bool const writeWarnings = true );
 
+        // This parses the XMl of tunnelPathFinders to construct a set of
+    // BouncePathFinder instances, filling pathFinders with pointers to them.
+    static std::vector< std::unique_ptr<BouncePathFinder> >
+    CreateBouncePathFinders( std::string const& tunnelPathFinders );
+
+        // This creates a new CosmoTransitionsRunner based on the given arguments
+    // and returns a pointer to it.
+    static std::unique_ptr<BounceAlongPathWithThreshold> CreateBounceAlongPathWithThreshold(
+                                     std::string const& constructorArguments );
+
+        // This creates a new BounceActionCalculator based on the given arguments
+    // and returns a pointer to it.
+    static std::unique_ptr<BounceActionCalculator>
+    CreateBounceActionCalculator( std::string const& classChoice,
+                                  std::string const& constructorArguments );
+
+    
+    // This interprets the given string as the appropriate element of the
+    // TunnelingCalculator::TunnelingStrategy enum.
+    static TunnelingCalculator::TunnelingStrategy
+    InterpretTunnelingStrategy( std::string& tunnelingStrategy );
+
+
+
 
   protected:
     typedef PotentialFromPolynomialWithMasses OneLoopPotential;
@@ -293,20 +317,8 @@ namespace VevaciousPlusPlus
     static void CheckSurvivalProbabilityThreshold(
                                    double const survivalProbabilityThreshold );
 
-    // This interprets the given string as the appropriate element of the
-    // TunnelingCalculator::TunnelingStrategy enum.
-    static TunnelingCalculator::TunnelingStrategy
-    InterpretTunnelingStrategy( std::string& tunnelingStrategy );
 
-    // This creates a new CosmoTransitionsRunner based on the given arguments
-    // and returns a pointer to it.
-    static std::unique_ptr<BounceAlongPathWithThreshold> CreateBounceAlongPathWithThreshold(
-                                     std::string const& constructorArguments );
 
-    // This parses the XMl of tunnelPathFinders to construct a set of
-    // BouncePathFinder instances, filling pathFinders with pointers to them.
-    static std::vector< std::unique_ptr<BouncePathFinder> >
-    CreateBouncePathFinders( std::string const& tunnelPathFinders );
 
     // This parses arguments from constructorArguments and uses them to
     // construct a MinuitOnPotentialOnParallelPlanes instance to use to try to
@@ -322,11 +334,7 @@ namespace VevaciousPlusPlus
     CreateMinuitOnPotentialPerpendicularToPath(
                                      std::string const& constructorArguments );
 
-    // This creates a new BounceActionCalculator based on the given arguments
-    // and returns a pointer to it.
-    static std::unique_ptr<BounceActionCalculator>
-    CreateBounceActionCalculator( std::string const& classChoice,
-                                  std::string const& constructorArguments );
+
 
     // This creates a new BubbleShootingOnPathInFieldSpace based on the given
     // arguments and returns a pointer to it.

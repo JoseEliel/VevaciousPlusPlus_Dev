@@ -171,7 +171,7 @@ set(sources source/BounceActionEvaluation/BounceActionPathFinding/MinuitOnHypers
         source/TunnelingCalculation/BounceActionTunneler.cpp
         source/Utilities/WarningLogger.cpp
         source/VevaciousPlusPlus.cpp
-        source/VevaciousPlusPlusMain.cpp)
+       )
 
 
 
@@ -206,8 +206,9 @@ endif()
 #############################################################################
 
 add_executable(VevaciousPlusPlus
-        $<TARGET_OBJECTS:objlib>)
+        $<TARGET_OBJECTS:objlib>  source/VevaciousPlusPlusMain.cpp)
 
+add_executable(Bouncer $<TARGET_OBJECTS:objlib> source/Bouncer.cpp)
 # Adding dependencies, including Homotopy continuation codes
 # This is skipped if within the GAMBIT ecosystem
 
@@ -239,7 +240,7 @@ else()
 endif()
 
 target_link_libraries(VevaciousPlusPlus ${Minuit_lib}/libMinuit2.a)
-
+target_link_libraries(Bouncer ${Minuit_lib}/libMinuit2.a)
 
 
 #############################################################################
