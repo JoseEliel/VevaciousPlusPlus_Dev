@@ -9,7 +9,7 @@
 #include "VevaciousPlusPlus.hpp"
 #include "LHPC/Utilities/RestrictedXmlParser.hpp"
 #include "Utilities/FilePlaceholderManager.hpp"
-
+#include "PotentialEvaluation/PotentialFunctions/BouncerPotentialFunction.hpp"
 
 int main( int argumentCount,
           char** argumentCharArrays )
@@ -99,6 +99,12 @@ int main( int argumentCount,
                                              resolutionOfPathPotential,
                                              pathFindingTimeout,
                                              vacuumSeparationFraction );
+
+// Potential function 
+
+
+
+
   // this was a triumph! I'm making a note here:
   return EXIT_SUCCESS;
 }
