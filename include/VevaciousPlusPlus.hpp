@@ -164,6 +164,11 @@ namespace VevaciousPlusPlus
 
 
 
+    // This creates a new LagrangianParameterManager based on the given
+    // arguments and returns a pointer to it.
+    static std::unique_ptr<LesHouchesAccordBlockEntryManager>
+    CreateLagrangianParameterManager( std::string const& classChoice,
+                                     std::string const& constructorArguments );
 
   protected:
     typedef PotentialFromPolynomialWithMasses OneLoopPotential;
@@ -194,11 +199,6 @@ namespace VevaciousPlusPlus
                                    std::string const& elementName,
                                    std::string& contentDestination );
 
-    // This creates a new LagrangianParameterManager based on the given
-    // arguments and returns a pointer to it.
-    static std::unique_ptr<LesHouchesAccordBlockEntryManager>
-    CreateLagrangianParameterManager( std::string const& classChoice,
-                                     std::string const& constructorArguments );
 
     // This creates a new PotentialFunction based on the given arguments and
     // returns a pointer to it.

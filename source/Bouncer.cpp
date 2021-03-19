@@ -100,6 +100,11 @@ int main( int argumentCount,
                                              pathFindingTimeout,
                                              vacuumSeparationFraction );
 
+// Here I create the LagrangianParameterManager I need to construct the potential
+
+ std::unique_ptr<VevaciousPlusPlus::LesHouchesAccordBlockEntryManager> LagrangianParameterManager
+    = std::move(VevaciousPlusPlus::VevaciousPlusPlus::CreateLagrangianParameterManager( "LesHouchesAccordBlockEntryManager", "Empty" ));
+
 // Potential function 
 
 
