@@ -159,6 +159,7 @@ set(sources source/BounceActionEvaluation/BounceActionPathFinding/MinuitOnHypers
         source/PotentialEvaluation/PotentialFunctions/PotentialFromPolynomialWithMasses.cpp
         source/PotentialEvaluation/PotentialFunctions/RgeImprovedOneLoopPotential.cpp
         source/PotentialEvaluation/PotentialFunctions/TreeLevelPotential.cpp
+        source/PotentialEvaluation/PotentialFunctions/BouncerPotentialFunction.cpp
         source/PotentialEvaluation/ThermalFunctions.cpp
         source/PotentialMinimization/HomotopyContinuation/Hom4ps2Runner.cpp
         source/PotentialMinimization/HomotopyContinuation/PHCRunner.cpp
@@ -226,6 +227,11 @@ else()
   add_dependencies(VevaciousPlusPlus objlib)
 
   add_dependencies(VevaciousPlusPlus VevaciousPlusPlus-lib)
+
+  add_dependencies(Bouncer objlib)
+
+  add_dependencies(Bouncer VevaciousPlusPlus-lib)
+
 
 endif()
 

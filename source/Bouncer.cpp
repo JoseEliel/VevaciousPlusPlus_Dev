@@ -7,9 +7,19 @@
  */
 
 #include "VevaciousPlusPlus.hpp"
+#include "PotentialEvaluation/PotentialFunctions/BouncerPotentialFunction.hpp"
 #include "LHPC/Utilities/RestrictedXmlParser.hpp"
 #include "Utilities/FilePlaceholderManager.hpp"
-#include "PotentialEvaluation/PotentialFunctions/BouncerPotentialFunction.hpp"
+
+
+double potential(std::vector< double > fieldConfiguration, double T){
+
+  double h1 = fieldConfiguration[0];
+  double h2 = fieldConfiguration[1];
+
+  return( h1*h2 + 0.1*h1*h1*h1*h1 + 0.1*h2*h2*h2*h2 - h1*h1 + h2*h2 );
+}
+
 
 int main( int argumentCount,
           char** argumentCharArrays )
@@ -107,6 +117,10 @@ int main( int argumentCount,
 
 // Potential function 
 
+double renormalizationScale = 1;
+
+
+VevaciousPlusPlus::BouncerPotentialFunction bouncerPotentialFunction( potential, renormalizationScale, *LagrangianParameterManager);
 
 
 
